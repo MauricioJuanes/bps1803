@@ -6,4 +6,5 @@
     <color name="colorBackground">#ffffff</color>
     <color name="colorTitle">#000000</color>
     <color name="colorDescription">#666666</color>
+    <color name="colorInactive">#e0e0e0</color>
 </resources>

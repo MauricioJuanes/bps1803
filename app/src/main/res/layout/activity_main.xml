@@ -84,7 +84,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/round_button"
+                    android:background="@drawable/round_button_active"
                     app:srcCompat="@mipmap/angle_right" />
             </RelativeLayout>
 
@@ -133,8 +133,8 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/round_button"
-                    app:srcCompat="@mipmap/angle_right" />
+                    android:background="@drawable/round_button_active"
+                    app:srcCompat="@mipmap/angle_right"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
