@@ -7,5 +7,19 @@
     <string name="label_historico_cfe_descripcion">Captura los datos de tu recibo</string>
     <string name="label_frente_recibo_cfe">Frente del recibo de CFE</string>
     <string name="label_frente_recibo_cfe_descripcion">Captura los datos de tu recibo</string>
+
+
     <string name="title_activity_map">Capturar area</string>
+    <string name="welcome_message">Mantenga presionada una zona en el mapa para iniciar la medición</string>
+    <string name="current_user_position_title">Tu ubicación actual</string>
+    <string name="calculate_location_area">Calcular área</string>
+    <string name="show_last_location">Mostrar última ubicación</string>
+    <string name="Show_current_location">Mostrar ubicación actual</string>
+    <string name="message_showing_current_location">Mostrando ubicación actual</string>
+    <string name="message_showing_last_location">Mostrando ubicación actual</string>
+    <string name="message_error_showing_last_location">No se encontraron datos de la ubicación anterior</string>
+    <string name="message_calculating_area">Calculando Área</string>
+    <string name="message_error_calculating_area">No se ha podido calcular el área seleccionada</string>
+    <string name="message_error_less_markers_on_map">No se puede calcular el área con menos de tres marcadores en el mapa</string>
+
 </resources>
