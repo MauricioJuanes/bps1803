@@ -7,4 +7,5 @@
     <string name="label_historico_cfe_descripcion">Captura los datos de tu recibo</string>
     <string name="label_frente_recibo_cfe">Frente del recibo de CFE</string>
     <string name="label_frente_recibo_cfe_descripcion">Captura los datos de tu recibo</string>
+    <string name="title_activity_map">Capturar area</string>
 </resources>

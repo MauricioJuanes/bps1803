@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.prototipo.prototipo.prototipo.CustomUserListView.CustomItemList;
+import com.prototipo.prototipo.prototipo.CustomUserListView.CustomListAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

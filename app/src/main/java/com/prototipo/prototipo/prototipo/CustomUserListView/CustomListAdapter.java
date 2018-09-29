@@ -1,8 +1,7 @@
-package com.prototipo.prototipo.prototipo;
+package com.prototipo.prototipo.prototipo.CustomUserListView;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.prototipo.prototipo.prototipo.CustomUserListView.CustomItemList;
+import com.prototipo.prototipo.prototipo.Maps.MapActivity;
+import com.prototipo.prototipo.prototipo.R;
 
 import java.util.List;
 
@@ -70,7 +72,10 @@ public class CustomListAdapter extends ArrayAdapter<CustomItemList> {
 
         switch (position){
             case 0:
-                System.out.println("0 was selected");
+                System.out.println("Inicializando mapa");
+                Intent map = new Intent(context, MapActivity.class);
+                context.startActivity(map);
+
                 break;
             case 1:
                 System.out.println("1 was selected");

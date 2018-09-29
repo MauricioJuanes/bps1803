@@ -1,4 +1,4 @@
-package com.prototipo.prototipo.prototipo;
+package com.prototipo.prototipo.prototipo.CustomUserListView;
 
 import android.widget.Button;
 
@@ -8,7 +8,7 @@ public class CustomItemList {
     private String description;
     private Button button;
 
-    CustomItemList(String title, String description){
+    public CustomItemList(String title, String description){
         this.title = title;
         this.description =  description;
     }
