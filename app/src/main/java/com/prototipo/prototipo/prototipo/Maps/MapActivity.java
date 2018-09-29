@@ -2,6 +2,7 @@ package com.prototipo.prototipo.prototipo.Maps;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,14 +37,26 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.prototipo.prototipo.prototipo.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
+import static java.lang.Math.toRadians;
 
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener
 {
 
     private LocationRequest mLocationRequest;
@@ -54,6 +67,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mMap;//current showed map
     private SupportMapFragment mapFragment;
     private Marker currentPositionmarker;
+
+    //Calculus of area
+    private ArrayList<LatLng> markerPosition = new ArrayList<>(); //puntos
+    private ArrayList<Marker> markerIcons = new ArrayList<>(); //marcadores
+    private ArrayList<Polyline> perimeterLines = new ArrayList<>(); //lineas
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +85,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             initGoogleMapLocation();
         }
 
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -75,12 +94,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 mMap = googleMap;
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 mMap.getUiSettings().setZoomControlsEnabled(false);
+
+
+                mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                    @Override
+                    public void onMapLongClick(LatLng latLng) {
+                        dibujarMarcador(latLng);
+                        System.out.println("hello");
+
+                    }
+                });
+
+                mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                    @Override
+                    public void onMarkerDragStart(Marker marker) {
+                        //Do nothing
+                    }
+
+                    @Override
+                    public void onMarkerDrag(Marker marker) {
+                        //Do nothing
+
+                    }
+
+                    @Override
+                    public void onMarkerDragEnd(Marker marker) {
+                        //Log.d("Area", "El Area Es: "+ computeArea(puntos));
+                        int idMarker = markerIcons.indexOf(marker);
+                        reajustarLineas(idMarker);
+                    }
+                });
+
             }
         });
 
-        final FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.menu_fab);
+        final FloatingActionsMenu floatingActionsMenu = findViewById(R.id.menu_fab);
 
-        FloatingActionButton showLastLocationButton =  (FloatingActionButton) findViewById(R.id.action_showCurrentLocation);
+        FloatingActionButton showLastLocationButton = findViewById(R.id.action_showCurrentLocation);
         showLastLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -180,7 +230,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             //If you have permission, go to the code to get the location value
             initGoogleMapLocation();
         } else {
-            //Toast.makeText(this, "Stop apps without permission to use location information", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Stop apps without permission to use location information", Toast.LENGTH_SHORT).show();
             //finish();
         }
     }
@@ -196,6 +246,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapLongClickListener(this);
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         //Initialize Google Play Services
@@ -211,18 +262,177 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             mMap.setMyLocationEnabled(true);
         }
 
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+
+
 
     }
 
-    @Override
-    public void onMapClick(LatLng latLng) {
-        //mMap = googleMap;
-        mapFragment.getMapAsync(this);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+    public void dibujarMarcador(LatLng latLng){
+        double lat = latLng.latitude;
+        double lon = latLng.longitude;
+
+        Marker nuevoMarcador = mMap.addMarker(new MarkerOptions().position(latLng).title(lat+"\n"+lon).draggable(true));
+        markerIcons.add(nuevoMarcador);
+        markerPosition.add(latLng);
+        int tamano = markerPosition.size();
+
+        if (tamano > 1){
+            LatLng puntoA = markerPosition.get(tamano-2);
+            LatLng puntoB = markerPosition.get(tamano-1);
+
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .add(puntoA, puntoB)
+                    .width(5)
+                    .color(Color.RED));
+            perimeterLines.add(line);
+
+            if (tamano > 2){
+                LatLng primerPunto = markerPosition.get(0);
+                Polyline lineaUltimoPrimero = mMap.addPolyline(new PolylineOptions()
+                        .add(puntoB, primerPunto)
+                        .width(5)
+                        .color(Color.RED));
+                if (tamano > 3){
+                    Polyline lineaUltimoPrimeroAnterior = perimeterLines.get(tamano-2);
+                    lineaUltimoPrimeroAnterior.remove();
+                    Polyline lineaPenultimoUltimo = perimeterLines.get(tamano-3);
+
+                    perimeterLines.set(tamano-2, lineaPenultimoUltimo);
+                    perimeterLines.set(tamano-1, lineaUltimoPrimero);
+                }else {
+                    perimeterLines.add(lineaUltimoPrimero);
+                }
+            }
+        }
+    }
+
+    public void reajustarLineas(int idMarker){
+        int size = markerIcons.size();
+        if (size > 0){
+            int idB = idMarker;
+            markerPosition.set(idB,markerIcons.get(idB).getPosition());
+            LatLng positionB = markerPosition.get(idB);
+
+            if (size == 2){
+                int idA = (idMarker-1 + size)%size;
+                markerPosition.set(idA,markerIcons.get(idA).getPosition());
+                LatLng positionA = markerPosition.get(idA);
+
+                if (idMarker == 0){
+                    Polyline lineaPosterior = perimeterLines.get(idB);
+                    lineaPosterior.remove();
+
+                    Polyline nuevaLineaPosterior = mMap.addPolyline(new PolylineOptions()
+                            .add(positionA, positionB)
+                            .width(5)
+                            .color(Color.RED));
+                    perimeterLines.set(idB,nuevaLineaPosterior);
+
+                }
+
+                if (idMarker == 1){
+                    Polyline lineaPrevia = perimeterLines.get(idA);
+                    lineaPrevia.remove();
+
+                    Polyline nuevaLineaPrevia = mMap.addPolyline(new PolylineOptions()
+                            .add(positionA, positionB)
+                            .width(5)
+                            .color(Color.RED));
+                    perimeterLines.set(idA,nuevaLineaPrevia);
+                }
+            }
+
+
+            if (size > 2){
+                int idA = (idMarker-1 + size)%size;
+
+                Polyline lineaPrevia = perimeterLines.get(idA);
+                Polyline lineaPosterior = perimeterLines.get(idB);
+                lineaPrevia.remove();
+                lineaPosterior.remove();
+
+                markerPosition.set(idA,markerIcons.get(idA).getPosition());
+                LatLng puntoA = markerPosition.get(idA);
+
+                Polyline nuevaLineaPrevia = mMap.addPolyline(new PolylineOptions()
+                        .add(puntoA, positionB)
+                        .width(5)
+                        .color(Color.RED));
+                perimeterLines.set(idA,nuevaLineaPrevia);
+
+                int idC = (idMarker+1)%size;
+                markerPosition.set(idC,markerIcons.get(idC).getPosition());
+                LatLng puntoC = markerPosition.get(idC);
+
+                Polyline nuevaLineaPosterior = mMap.addPolyline(new PolylineOptions()
+                        .add(positionB, puntoC)
+                        .width(5)
+                        .color(Color.RED));
+                perimeterLines.set(idB,nuevaLineaPosterior);
+            }
+
+        }
+
+    }
+
+    /**
+     * Returns the area of a closed path on Earth.
+     * @param path A closed path.
+     * @return The path's area in square meters.
+     */
+    public static double computeArea(List<LatLng> path) {
+        return abs(computeSignedArea(path));
+    }
+
+    /**
+     * Returns the signed area of a closed path on Earth. The sign of the area may be used to
+     * determine the orientation of the path.
+     * "inside" is the surface that does not contain the South Pole.
+     * @param path A closed path.
+     * @return The loop's area in square meters.
+     */
+    public static double computeSignedArea(List<LatLng> path) {
+        double EARTH_RADIUS = 6371009;
+        return computeSignedArea(path, EARTH_RADIUS);
+    }
+
+    /**
+     * Returns the signed area of a closed path on a sphere of given radius.
+     * The computed area uses the same units as the radius squared.
+     * Used by SphericalUtilTest.
+     */
+    static double computeSignedArea(List<LatLng> path, double radius) {
+        int size = path.size();
+        if (size < 3) { return 0; }
+        double total = 0;
+        LatLng prev = path.get(size - 1);
+        double prevTanLat = tan((PI / 2 - toRadians(prev.latitude)) / 2);
+        double prevLng = toRadians(prev.longitude);
+        // For each edge, accumulate the signed area of the triangle formed by the North Pole
+        // and that edge ("polar triangle").
+        for (LatLng point : path) {
+            double tanLat = tan((PI / 2 - toRadians(point.latitude)) / 2);
+            double lng = toRadians(point.longitude);
+            total += polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
+            prevTanLat = tanLat;
+            prevLng = lng;
+        }
+        return total * (radius * radius);
+    }
+
+    /**
+     * Returns the signed area of a triangle which has North Pole as a vertex.
+     * Formula derived from "Area of a spherical triangle given two edges and the included angle"
+     * as per "Spherical Trigonometry" by Todhunter, page 71, section 103, point 2.
+     * See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
+     * The arguments named "tan" are tan((pi/2 - latitude)/2).
+     */
+    private static double polarTriangleArea(double tan1, double lng1, double tan2, double lng2) {
+        double deltaLng = lng1 - lng2;
+        double t = tan1 * tan2;
+        return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng));
     }
 
 
@@ -230,4 +440,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         initGoogleMapLocation();
     }
 
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+    }
 }
