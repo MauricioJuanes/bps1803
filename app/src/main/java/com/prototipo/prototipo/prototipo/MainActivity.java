@@ -16,10 +16,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
+import android.widget.ListView;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.prototipo.prototipo.prototipo.CustomUserListView.CustomItemList;
+import com.prototipo.prototipo.prototipo.CustomUserListView.CustomListAdapter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private  static final int REQUEST_CODE = 1;
@@ -30,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkbox_propietario;
     private Uri archivo;
 
+
+    //List of options for the main view
+    private List<CustomItemList> optionList;
+
+    private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +47,18 @@ public class MainActivity extends AppCompatActivity {
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
         checkbox_propietario = findViewById(R.id.chk_propietario);
+
+
+
+        //initializing objects
+        optionList = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.options_list_view);
+        CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
+        listView.setAdapter(adapter);
+
+        //adding some values to our list
+        optionList.add(new CustomItemList("Área de un local", "000 m2"));
+        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
 
         cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
