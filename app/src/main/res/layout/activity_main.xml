@@ -9,29 +9,133 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorBakcground">
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5px"
+            android:layout_margin="5dp"
             android:background="@drawable/border_component"
             android:orientation="vertical"
-            android:padding="10px">
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/lbl_propietario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20px"
-                android:text="@string/label_owner" />
+                android:text="@string/label_owner"
+                android:textSize="18dp"
+                android:textColor="@color/colorTitle" />
 
             <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="match_parent"
+                android:id="@+id/chk_propietario"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/checkbox_label_owner" />
+                android:gravity="left|center"
+                android:hapticFeedbackEnabled="false"
+                android:text="@string/checkbox_label_owner"
+                android:textColor="@color/colorDescription"
+                android:translationX="-12px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/border_component"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/lbl_historico_cfe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_historico_cfe"
+                    android:textColor="@color/colorTitle"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/lbl_historico_cfe_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/lbl_historico_cfe"
+                    android:text="@string/label_frente_recibo_cfe_descripcion"
+                    android:textColor="@color/colorDescription" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+                <ImageButton
+                    android:id="@+id/btn_historico_cfe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/round_button"
+                    app:srcCompat="@mipmap/angle_right" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/border_component"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/lbl_frente_recibo_cfe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_frente_recibo_cfe"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorTitle" />
+
+                <TextView
+                    android:id="@+id/lbl_frente_recibo_cfe_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/lbl_frente_recibo_cfe"
+                    android:text="@string/label_frente_recibo_cfe_descripcion"
+                    android:textColor="@color/colorDescription" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/btn_frente_recibo_cfe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/round_button"
+                    app:srcCompat="@mipmap/angle_right" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
