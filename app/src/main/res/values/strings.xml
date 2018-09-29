@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Prototipo</string>
+    <string name="app_title">Page Title</string>
+    
+    <string name="label_local_space">Área de un local</string>
+    
     <string name="checkbox_label_owner">La persona es dueña del predio</string>
     <string name="label_owner">Propietario</string>
+    
 </resources>
