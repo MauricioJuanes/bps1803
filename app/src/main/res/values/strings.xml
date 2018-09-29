@@ -2,8 +2,10 @@
     <string name="app_name">Prototipo</string>
     <string name="checkbox_label_owner">La persona es dueña del predio</string>
     <string name="label_owner">Propietario</string>
+    <string name="label_local_space">Área de un local</string>
     <string name="label_historico_cfe">Histórico CFE</string>
     <string name="label_historico_cfe_descripcion">Captura los datos de tu recibo</string>
     <string name="label_frente_recibo_cfe">Frente del recibo de CFE</string>
     <string name="label_frente_recibo_cfe_descripcion">Captura los datos de tu recibo</string>
+    <string name="title_activity_map">Capturar area</string>
 </resources>
