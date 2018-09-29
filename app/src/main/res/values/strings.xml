@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Prototipo</string>
+    <string name="checkbox_label_owner">La persona es dueña del predio</string>
+    <string name="label_owner">Propietario</string>
+</resources>
