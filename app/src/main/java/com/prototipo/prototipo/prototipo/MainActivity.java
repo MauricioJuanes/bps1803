@@ -503,14 +503,14 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         // change this code to refresh all content for this view. Shows data saved on this device via shared preferences
-        /* optionList = new ArrayList<>();
+        optionList = new ArrayList<>();
         listView = findViewById(R.id.options_list_view);
         CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
-        listView.setAdapter(adapter);*/
+        listView.setAdapter(adapter);
 
         //adding some values to our list
-        /*optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));*/
+        optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
+        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
 
     }
 }
