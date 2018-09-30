@@ -3,6 +3,7 @@
     <string name="checkbox_label_owner">La persona es dueña del predio</string>
     <string name="label_owner">Propietario</string>
     <string name="label_local_space">Área de un local</string>
+    <string name="label_local_space_description">Selecciona y mide el mapa</string>
     <string name="label_historico_cfe">Histórico CFE</string>
     <string name="label_historico_cfe_descripcion">Captura los datos de tu recibo</string>
     <string name="label_frente_recibo_cfe">Frente del recibo de CFE</string>

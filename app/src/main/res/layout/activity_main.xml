@@ -53,6 +53,61 @@
                 android:background="@drawable/border_component"
                 android:padding="10dp">
 
+
+                <RelativeLayout
+                    android:id="@+id/contenedor_mapa_area_local"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/lbl_mapa_area_local"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_local_space"
+                        android:textColor="@color/colorTitle"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/lbl_mapa_area_local_descripcion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lbl_mapa_area_local"
+                        android:text="@string/label_local_space_description"
+                        android:textColor="@color/colorDescription" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/btn_mapa_area_local"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:background="@drawable/round_button_active"
+                        app:srcCompat="@mipmap/angle_right" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/border_component"
+                android:padding="10dp">
+
                 <RelativeLayout
                     android:id="@+id/contenedor_historico_cfe"
                     android:layout_width="wrap_content"
@@ -161,6 +216,7 @@
                 android:id="@+id/options_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 >
 
             </ListView>

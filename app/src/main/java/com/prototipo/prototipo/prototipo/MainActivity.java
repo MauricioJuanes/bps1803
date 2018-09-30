@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private ImageButton boton_historico_cfe;
     private ImageButton boton_frente_recibo_cfe;
+    private ImageButton boton_mapa_area_local;
+    private TextView texto_mapa_area_local_descripcion;
     private CheckBox checkbox_propietario;
     private Uri archivo;
     private Database database;
@@ -99,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
         database = new Database(this.getApplicationContext());
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
+        boton_mapa_area_local = findViewById(R.id.btn_mapa_area_local);
         checkbox_propietario = findViewById(R.id.chk_propietario);
+        texto_mapa_area_local_descripcion = findViewById(R.id.lbl_mapa_area_local_descripcion);
 
 
         //initializing objects
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
+        cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
@@ -143,10 +148,12 @@ public class MainActivity extends AppCompatActivity {
                 if(checkbox_propietario.isChecked()){
                     cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
                     cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
+                    cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
                 }
                 else{
                     cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
                     cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
+                    cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
                 }
             }
         });
