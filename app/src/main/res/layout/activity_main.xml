@@ -103,15 +103,6 @@
                     android:paddingTop="5dp"
                     android:layout_below="@id/contenedor_historico_cfe">
 
-
-
-                    <ListView
-                        android:id="@+id/options_list_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone">
-
-                    </ListView>
                 </LinearLayout>
 
 
@@ -169,6 +160,14 @@
 
 
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/options_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </ListView>
 
     </ScrollView>
 </android.support.constraint.ConstraintLayout>
