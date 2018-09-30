@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
         listView.setAdapter(adapter);
 
-        //adding some values to our list
+        //adding some values to our list edit if listview is removed
         optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
         optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
 
