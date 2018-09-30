@@ -3,6 +3,16 @@ package com.prototipo.prototipo.prototipo.DataPersistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.*;
+import android.location.Location;
+import android.location.LocationListener;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private Context context;
@@ -14,12 +24,14 @@ public class Database {
         this.db = context.getSharedPreferences("ApplicationData",Context.MODE_PRIVATE );
     }
 
-    public String saveElement(String name, String value){
-        return "";
+    public void saveElement(String name, String value){
+        Editor editor = db.edit();
+        editor.putString(name, value );
+        editor.apply();
     }
 
-    public Boolean existsElement(String name){
-        return true;
+    public String getElement(String name){
+        return db.getString(name, "");
     }
 
     public void saveCalculatedArea(double localArea){
@@ -34,6 +46,39 @@ public class Database {
         return calculatedArea;
     }
 
+    public void saveCurrentPosition(String latLng){
+        Editor editor = db.edit();
+        editor.putString("lastPosition", latLng);
+        editor.apply();
+    }
+
+    public LatLng getLastPosition(){
+        String[] latLng = db.getString("lastPosition", "0.0,0.0").split(",");
+        double latitude = Double.parseDouble(latLng[0]);
+        double longitude = Double.parseDouble(latLng[1]);
+        LatLng location = new LatLng(latitude, longitude);
+        return location;
+    }
+
+    public void saveAreaMarkers(ArrayList<LatLng> positionMarkersOnMap){
+        Editor editor = db.edit();
+        editor.putString("positionMarkersOnMap", new Gson().toJson(positionMarkersOnMap));
+        editor.apply();
+        System.out.println("#####################################################################");
+        System.out.println("Almacenando posiciones en json"+new Gson().toJson(positionMarkersOnMap));
+        System.out.println("#####################################################################");
+    }
+
+    public List<LatLng> getAreaMarkers(){
+        List<LatLng>  positionsArray = new ArrayList<>();
+        String positions = db.getString("positionMarkersOnMap", "");
+        try{
+            Type type = new TypeToken<List<LatLng>>(){}.getType();
+            positionsArray = new Gson().fromJson(positions, type);
+        }catch (Exception e){/**/}
+
+        return positionsArray;
+    }
 
 
 }

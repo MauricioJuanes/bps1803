@@ -88,8 +88,8 @@
                         android:id="@+id/btn_mapa_area_local"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
                         android:background="@drawable/round_button_active"
@@ -212,14 +212,7 @@
                         app:srcCompat="@mipmap/angle_right" />
                 </RelativeLayout>
             </LinearLayout>
-            <ListView
-                android:id="@+id/options_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                >
 
-            </ListView>
 
 
         </LinearLayout>

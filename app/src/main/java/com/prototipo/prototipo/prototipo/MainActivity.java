@@ -20,8 +20,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
@@ -50,11 +48,10 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.prototipo.prototipo.prototipo.CustomUserListView.CustomItemList;
-import com.prototipo.prototipo.prototipo.CustomUserListView.CustomListAdapter;
 
 import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 
+import com.prototipo.prototipo.prototipo.Maps.MapActivity;
 import com.prototipo.prototipo.prototipo.Models.Historico;
 
 import java.util.ArrayList;
@@ -89,10 +86,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
 
-    //List of options for the main view
-    private List<CustomItemList> optionList;
-
-    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,32 +99,6 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion = findViewById(R.id.lbl_mapa_area_local_descripcion);
 
 
-        //initializing objects
-        optionList = new ArrayList<>();
-        /*optionList.add(new CustomItemList("Área de un local", "000 m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
-        optionList.add(new CustomItemList("Área de un local", "000 m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
-        optionList.add(new CustomItemList("Área de un local", "000 m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
-        optionList.add(new CustomItemList("Área de un local", "000 m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
-        optionList.add(new CustomItemList("Área de un local", "000 m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));*/
-        listView = (ListView) findViewById(R.id.options_list_view);
-        optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
-        CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
-
-
-        //adding some values to our list
-
-
-
-
-        listView.setAdapter(adapter);
-
-
         cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
@@ -141,6 +108,14 @@ public class MainActivity extends AppCompatActivity {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }
+
+        boton_mapa_area_local.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mapActivity = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(mapActivity);
+            }
+        });
 
         checkbox_propietario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -509,15 +484,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        // change this code to refresh all content for this view. Shows data saved on this device via shared preferences
-        optionList = new ArrayList<>();
-        listView = findViewById(R.id.options_list_view);
-        CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
-        listView.setAdapter(adapter);
-
-        //adding some values to our list
-        optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
-        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
+        texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
 
     }
 }

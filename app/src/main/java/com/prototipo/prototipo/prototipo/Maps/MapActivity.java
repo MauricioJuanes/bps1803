@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -46,7 +45,6 @@ import com.google.android.gms.tasks.Task;
 import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 import com.prototipo.prototipo.prototipo.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +68,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mMap;//current showed map
     private SupportMapFragment mapFragment;
     private Marker currentPositionmarker;
+    private Boolean isShowingLastPosition = true;
 
     //Const for area and validations
     public static final int MINIMAL_NUMBER_OF_MARKERS = 3;
@@ -158,6 +157,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             }
         });
 
+        FloatingActionButton showLastPositionButton = findViewById(R.id.action_showLastLocation);
+        showLastPositionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLasttLocationOnMap();
+                floatingActionsMenu.collapse();
+                Toast.makeText(view.getContext(),R.string.message_showing_last_location, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     private void checkMyPermissionLocation() {
@@ -180,19 +190,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 super.onLocationResult(result);
                 //mCurrentLocation = locationResult.getLastLocation();
                 mCurrentLocation = result.getLocations().get(0);
+                mMap.clear();
+
                 if(mCurrentLocation!=null)
                 {
                     Log.e("Location(Lat)==",""+mCurrentLocation.getLatitude());
                     Log.e("Location(Long)==",""+mCurrentLocation.getLongitude());
                 }
-                mMap.clear();
+
+                LatLng lastPositionSaved = database.getLastPosition();
+                if(lastPositionSaved.latitude != 0.0 && lastPositionSaved.longitude != 0.0 && isShowingLastPosition){
+                    mCurrentLocation.setLatitude(lastPositionSaved.latitude);
+                    mCurrentLocation.setLongitude(lastPositionSaved.longitude);
+                    List<LatLng> restoredPositions;
+                    restoredPositions = database.getAreaMarkers();
+                    for (int i=0; i<restoredPositions.size();i++){
+                        drawMarker(restoredPositions.get(i));
+                    }
+
+
+                }
+
                 MarkerOptions options = new MarkerOptions();
                 options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(getApplicationContext().getString(R.string.current_user_position_title));
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 options.icon(icon);
                 currentPositionmarker = mMap.addMarker(options);
                 LatLng position = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 17));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 20));
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             }
 
@@ -263,7 +288,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
    @Override
     public void onMapReady(GoogleMap googleMap) {
-
     }
 
     private void drawMarker(LatLng latLng){
@@ -315,6 +339,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             }
         }
     }
+
     private void redrawPerimeter(int idMarker){
         int size = markerIcons.size();
         if (size > 0){
@@ -390,8 +415,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             Toast.makeText(this.context,R.string.message_error_less_markers_on_map, Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this.context,R.string.message_calculating_area, Toast.LENGTH_SHORT).show();
-            //save this -> new DecimalFormat("##.##").format(computeArea(this.markerPosition))+" m2"
+            String savedPosition = mCurrentLocation.getLatitude()+","+mCurrentLocation.getLongitude();
             database.saveCalculatedArea(computeArea(this.markerPosition));
+            database.saveCurrentPosition(savedPosition);
+            database.saveAreaMarkers(markerPosition);
             finish();
         }
     }
@@ -456,10 +483,22 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
 
     private void showCurrentLocationOnMap(){
+        isShowingLastPosition = false;
         initGoogleMapLocation();
         markerPosition = new ArrayList<>();
         markerIcons = new ArrayList<>();
         perimeterLines = new ArrayList<>();
+    }
+
+    private void showLasttLocationOnMap(){
+        isShowingLastPosition = true;
+        markerPosition = new ArrayList<>();
+        markerIcons = new ArrayList<>();
+        perimeterLines = new ArrayList<>();
+        initGoogleMapLocation();
+
+
+
     }
 
     @Override
