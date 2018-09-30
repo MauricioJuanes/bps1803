@@ -18,7 +18,7 @@
     <string name="message_showing_current_location">Mostrando ubicación actual</string>
     <string name="message_showing_last_location">Mostrando ubicación actual</string>
     <string name="message_error_showing_last_location">No se encontraron datos de la ubicación anterior</string>
-    <string name="message_calculating_area">Calculando Área</string>
+    <string name="message_calculating_area">Área calculada</string>
     <string name="message_error_calculating_area">No se ha podido calcular el área seleccionada</string>
     <string name="message_error_less_markers_on_map">No se puede calcular el área con menos de tres marcadores en el mapa</string>
 

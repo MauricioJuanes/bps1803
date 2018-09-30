@@ -1,6 +1,7 @@
 package com.prototipo.prototipo.prototipo.Maps;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -10,7 +11,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -42,8 +43,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 import com.prototipo.prototipo.prototipo.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +71,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private SupportMapFragment mapFragment;
     private Marker currentPositionmarker;
 
+    //Const for area and validations
+    public static final int MINIMAL_NUMBER_OF_MARKERS = 3;
+
+    //Data persistence
+    private Database database;
+
     //Calculus of area
+    private Context context;
     private ArrayList<LatLng> markerPosition = new ArrayList<>(); //puntos
     private ArrayList<Marker> markerIcons = new ArrayList<>(); //marcadores
     private ArrayList<Polyline> perimeterLines = new ArrayList<>(); //lineas
@@ -77,7 +87,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        context = this;
+        this.database = new Database(this.getApplicationContext());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             checkMyPermissionLocation();
@@ -99,9 +110,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                     @Override
                     public void onMapLongClick(LatLng latLng) {
-                        dibujarMarcador(latLng);
-                        System.out.println("hello");
-
+                        drawMarker(latLng);
                     }
                 });
 
@@ -121,7 +130,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     public void onMarkerDragEnd(Marker marker) {
                         //Log.d("Area", "El Area Es: "+ computeArea(puntos));
                         int idMarker = markerIcons.indexOf(marker);
-                        reajustarLineas(idMarker);
+                        redrawPerimeter(idMarker);
                     }
                 });
 
@@ -129,7 +138,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         });
 
         final FloatingActionsMenu floatingActionsMenu = findViewById(R.id.menu_fab);
-
         FloatingActionButton showLastLocationButton = findViewById(R.id.action_showCurrentLocation);
         showLastLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +145,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 showCurrentLocationOnMap();
                 floatingActionsMenu.collapse();
                 Toast.makeText(view.getContext(),R.string.message_showing_current_location, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        FloatingActionButton calculateAreaButton = findViewById(R.id.action_calculateArea);
+        calculateAreaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calculateArea();
+                floatingActionsMenu.collapse();
+
             }
         });
 
@@ -245,70 +263,59 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
    @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMapLongClickListener(this);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-            }
-        }
-        else {
-
-            mMap.setMyLocationEnabled(true);
-        }
-
-
-
-
-
 
     }
 
-    public void dibujarMarcador(LatLng latLng){
-        double lat = latLng.latitude;
-        double lon = latLng.longitude;
+    private void drawMarker(LatLng latLng){
 
-        Marker nuevoMarcador = mMap.addMarker(new MarkerOptions().position(latLng).title(lat+"\n"+lon).draggable(true));
-        markerIcons.add(nuevoMarcador);
+        MarkerOptions options = new MarkerOptions().position(latLng).title("Punto "+markerIcons.size()).draggable(true);
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        Marker newMarker = mMap.addMarker(options);
+        markerIcons.add(newMarker);
         markerPosition.add(latLng);
-        int tamano = markerPosition.size();
+        drawPerimeter();
 
-        if (tamano > 1){
-            LatLng puntoA = markerPosition.get(tamano-2);
-            LatLng puntoB = markerPosition.get(tamano-1);
+    }
+
+    private void drawPerimeter(){
+        int numberOfMarkers = markerPosition.size();
+
+        if (numberOfMarkers > 1){
+            LatLng positionA = markerPosition.get(numberOfMarkers-2);
+            LatLng positionB = markerPosition.get(numberOfMarkers-1);
 
             Polyline line = mMap.addPolyline(new PolylineOptions()
-                    .add(puntoA, puntoB)
+                    .add(positionA, positionB)
                     .width(5)
                     .color(Color.RED));
             perimeterLines.add(line);
 
-            if (tamano > 2){
-                LatLng primerPunto = markerPosition.get(0);
-                Polyline lineaUltimoPrimero = mMap.addPolyline(new PolylineOptions()
-                        .add(puntoB, primerPunto)
+            if (numberOfMarkers > 2){
+                LatLng firstMarkerPosition = markerPosition.get(0);
+                Polyline lineLastToFirst = mMap.addPolyline(new PolylineOptions()
+                        .add(positionB, firstMarkerPosition)
                         .width(5)
                         .color(Color.RED));
-                if (tamano > 3){
-                    Polyline lineaUltimoPrimeroAnterior = perimeterLines.get(tamano-2);
+                if (numberOfMarkers > 3){
+                    Polyline lineaUltimoPrimeroAnterior = perimeterLines.get(numberOfMarkers-2);
                     lineaUltimoPrimeroAnterior.remove();
-                    Polyline lineaPenultimoUltimo = perimeterLines.get(tamano-3);
+                    Polyline linePenultimateToFinalPosition = perimeterLines.get(numberOfMarkers-1);
+                    linePenultimateToFinalPosition.remove();
+                    linePenultimateToFinalPosition = mMap.addPolyline(new PolylineOptions()
+                            .add(markerPosition.get(numberOfMarkers-2), markerPosition.get(numberOfMarkers-1))
+                            .width(5)
+                            .color(Color.RED));
 
-                    perimeterLines.set(tamano-2, lineaPenultimoUltimo);
-                    perimeterLines.set(tamano-1, lineaUltimoPrimero);
+                    perimeterLines.set(numberOfMarkers-2, linePenultimateToFinalPosition);
+                    perimeterLines.set(numberOfMarkers-1, lineLastToFirst);
                 }else {
-                    perimeterLines.add(lineaUltimoPrimero);
+                    perimeterLines.add(lineLastToFirst);
                 }
+
             }
         }
     }
-
-    public void reajustarLineas(int idMarker){
+    private void redrawPerimeter(int idMarker){
         int size = markerIcons.size();
         if (size > 0){
             int idB = idMarker;
@@ -377,6 +384,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    private void calculateArea(){
+        int numberMarkersOnMap = this.markerIcons.size();
+        if (numberMarkersOnMap < MINIMAL_NUMBER_OF_MARKERS){
+            Toast.makeText(this.context,R.string.message_error_less_markers_on_map, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this.context,R.string.message_calculating_area, Toast.LENGTH_SHORT).show();
+            //save this -> new DecimalFormat("##.##").format(computeArea(this.markerPosition))+" m2"
+            database.saveCalculatedArea(computeArea(this.markerPosition));
+            finish();
+        }
+    }
+
     /**
      * Returns the area of a closed path on Earth.
      * @param path A closed path.
@@ -438,11 +457,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     private void showCurrentLocationOnMap(){
         initGoogleMapLocation();
+        markerPosition = new ArrayList<>();
+        markerIcons = new ArrayList<>();
+        perimeterLines = new ArrayList<>();
     }
-
 
     @Override
     public void onMapLongClick(LatLng latLng) {
 
     }
+
 }

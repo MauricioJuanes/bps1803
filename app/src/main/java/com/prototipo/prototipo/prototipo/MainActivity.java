@@ -18,10 +18,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.prototipo.prototipo.prototipo.CustomUserListView.CustomItemList;
 import com.prototipo.prototipo.prototipo.CustomUserListView.CustomListAdapter;
+import com.prototipo.prototipo.prototipo.DataPersistence.Database;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton boton_frente_recibo_cfe;
     private CheckBox checkbox_propietario;
     private Uri archivo;
+    private Database database;
 
 
     //List of options for the main view
@@ -44,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        database = new Database(this.getApplicationContext());
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
         checkbox_propietario = findViewById(R.id.chk_propietario);
-
 
 
         //initializing objects
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         //adding some values to our list
-        optionList.add(new CustomItemList("Área de un local", "000 m2"));
+        optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
         optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
 
         cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
@@ -140,5 +144,20 @@ public class MainActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         return new File(mediaStorageDir.getPath() + File.separator +
                 "IMG_"+ timeStamp + ".jpg");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // change this code to refresh all content for this view. Shows data saved on this device via shared preferences
+        optionList = new ArrayList<>();
+        listView = findViewById(R.id.options_list_view);
+        CustomListAdapter adapter = new CustomListAdapter(this, R.layout.item_list_layout, optionList);
+        listView.setAdapter(adapter);
+
+        //adding some values to our list
+        optionList.add(new CustomItemList("Área de un local", new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2"));
+        optionList.add(new CustomItemList("Histórico CFE", "Captura los datos de tu recibo"));
+
     }
 }
