@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorAccent"
-            fab:fab_icon="@drawable/clock"
+
             fab:fab_title="@string/show_last_location" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorAccent"
-            fab:fab_icon="@drawable/gps"
+
             fab:fab_title="@string/Show_current_location" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorAccent"
-            fab:fab_icon="@drawable/area"
+
             fab:fab_title="@string/calculate_location_area" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
