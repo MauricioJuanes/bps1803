@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent mapActivity = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(mapActivity);
+                Toast.makeText(view.getContext(),R.string.message_loading_map, Toast.LENGTH_SHORT).show();
             }
         });
 
