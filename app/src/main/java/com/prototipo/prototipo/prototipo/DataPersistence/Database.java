@@ -80,5 +80,11 @@ public class Database {
         return positionsArray;
     }
 
+    public void DeleteElement(String name){
+        Editor editor = db.edit();
+        editor.remove(name);
+        editor.apply();
+    }
+
 
 }

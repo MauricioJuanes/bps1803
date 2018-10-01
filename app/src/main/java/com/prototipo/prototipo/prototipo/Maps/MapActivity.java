@@ -83,6 +83,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ArrayList<Marker> markerIcons = new ArrayList<>(); //marcadores
     private ArrayList<Polyline> perimeterLines = new ArrayList<>(); //lineas
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

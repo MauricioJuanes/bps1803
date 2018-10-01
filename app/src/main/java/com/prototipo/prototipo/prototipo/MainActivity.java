@@ -1,6 +1,7 @@
 package com.prototipo.prototipo.prototipo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,11 +21,13 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
 import java.io.FileNotFoundException;
@@ -49,6 +52,8 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 
 import com.prototipo.prototipo.prototipo.Maps.MapActivity;
@@ -84,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    public String clave_historico = "clave_historico";
+    public String clave_ultimo_archivo = "clave_ultimo_archivo";
+
+    private Gson gson;
 
 
 
@@ -92,16 +101,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         database = new Database(this.getApplicationContext());
+        gson = new Gson();
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
         boton_mapa_area_local = findViewById(R.id.btn_mapa_area_local);
         checkbox_propietario = findViewById(R.id.chk_propietario);
         texto_mapa_area_local_descripcion = findViewById(R.id.lbl_mapa_area_local_descripcion);
 
-
         cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
         cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
+
+        //revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
@@ -122,7 +133,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(checkbox_propietario.isChecked()){
-                    cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
+
+                    if(boton_historico_cfe.getTag() != null && boton_historico_cfe.getTag().toString().equalsIgnoreCase("View")){
+                        boton_historico_cfe.setEnabled(Boolean.TRUE);
+                        boton_historico_cfe.setBackgroundColor(getResources().getColor(R.color.colorBackground));
+                    }
+                    else
+                        cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
                     cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
                     cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
                 }
@@ -137,13 +154,95 @@ public class MainActivity extends AppCompatActivity {
         boton_historico_cfe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tomarFotografia();
+                if(boton_historico_cfe.getTag() != null){
+                    if( boton_historico_cfe.getTag() != null && boton_historico_cfe.getTag().toString().isEmpty() == false &&  boton_historico_cfe.getTag().toString().equalsIgnoreCase("View")){
+                        Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
+                        verImagen.putExtra("imagen",database.getElement(clave_ultimo_archivo));
+                        startActivity(verImagen);
+
+
+                    }
+                    else
+                        tomarFotografia();
+                }
+                else{
+                    tomarFotografia();
+                }
+
             }
         });
 
+    }
+
+    public void revisar_historico_cfe_guardado(Database database, ImageButton boton){
+
+        String historico = database.getElement(clave_historico);
+        String imagen = database.getElement(clave_ultimo_archivo);
+        Gson gson = new Gson();
+        LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
+        contenedor_historico.removeAllViews();
+        Type historico_lista_tipo = new TypeToken<ArrayList<Historico>>(){}.getType();
+        if(historico != null && imagen != null && historico.isEmpty() == false && imagen.isEmpty() == false){
+            File imagen_archivo = new File(imagen);
+            ArrayList<Historico> lista_historico = gson.fromJson(historico, historico_lista_tipo);
+
+            if( lista_historico != null && lista_historico.size() > 0){
+
+                contenedor_historico.setVisibility(View.VISIBLE);
+                TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
+                texto_historico_cfe_descripcion.setText("");
+                for(int index = 0; index < lista_historico.size(); index ++){
 
 
 
+                    LayoutInflater vista = LayoutInflater.from(getApplicationContext());
+                    View elemento = vista.inflate(R.layout.item_historico, null, false);
+                    RelativeLayout contenedor_item_historico = elemento.findViewById(R.id.container_item_historico);
+                    TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
+                    TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
+
+                    texto_fecha.setText(lista_historico.get(index).getFecha());
+                    texto_consumo.setText(lista_historico.get(index).getConsumo().toString());
+
+                    if(index%2 == 0)
+                        contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
+                    contenedor_historico.addView(elemento);
+
+                }
+                boton.setEnabled(Boolean.TRUE);
+                boton.setBackgroundResource(R.color.colorBackground);
+                boton.setImageResource(R.mipmap.eye_icon);
+                boton.setTag("View");
+            }
+
+            if(checkbox_propietario.isChecked()) {
+                boton.setEnabled(Boolean.TRUE);
+                boton.setBackgroundColor(getResources().getColor(R.color.colorBackground));
+
+            }else{
+                boton.setEnabled(Boolean.FALSE);
+                boton.setBackground(getDrawable(R.drawable.round_button_inactive));
+
+            }
+        }
+        else{
+
+            contenedor_historico.setVisibility(View.GONE);
+            TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
+            texto_historico_cfe_descripcion.setText(R.string.label_frente_recibo_cfe_descripcion);
+
+            if(checkbox_propietario.isChecked()) {
+                boton.setEnabled(Boolean.TRUE);
+                boton.setBackground(getDrawable(R.drawable.round_button_active));
+                boton.setImageResource(R.mipmap.angle_right);
+                boton.setTag("");
+            }else{
+                boton.setEnabled(Boolean.FALSE);
+                boton.setBackground(getDrawable(R.drawable.round_button_inactive));
+                boton.setImageResource(R.mipmap.angle_right);
+                boton.setTag("");
+            }
+        }
     }
 
     public File getCameraFile() {
@@ -318,54 +417,65 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             MainActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), "CameraDemo");
 
-                File file = new File(mediaStorageDir.getPath() + File.separator +
-                        "data" + ".txt");
-                FileOutputStream stream = null;
-                try {
-                    stream = new FileOutputStream(file);
-                    stream.write(resultado.getBytes());
-                    stream.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
             }
 
             Double promedio = 0.0;
 
+
+
             for(int index = 0; index < historico_cfe.size(); index ++){
                 LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
 
+
                 LayoutInflater vista = LayoutInflater.from(getApplicationContext());
                 View elemento = vista.inflate(R.layout.item_historico, null, false);
+                RelativeLayout contenedor_item_historico = elemento.findViewById(R.id.container_item_historico);
                 TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
                 TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
 
                 texto_fecha.setText(historico_cfe.get(index).getFecha());
                 texto_consumo.setText(historico_cfe.get(index).getConsumo().toString());
                 promedio += historico_cfe.get(index).getConsumo();
+
+                if(index%2 == 0)
+                    contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
                 contenedor_historico.addView(elemento);
 
             }
-            TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
-            texto_historico_cfe_descripcion.setText("");
-            LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
 
-            LayoutInflater vista = LayoutInflater.from(getApplicationContext());
-            View elemento = vista.inflate(R.layout.item_historico, null, false);
-            TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
-            TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
+            if(historico_cfe.size() > 0){
+                boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
+                boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
+                boton_historico_cfe.setTag("View");
+                LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
+                contenedor_historico.setVisibility(View.VISIBLE);
+                TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
+                texto_historico_cfe_descripcion.setText("");
 
-            texto_fecha.setText("Promedio de consumo");
 
-            promedio = promedio / historico_cfe.size();
-            texto_consumo.setText(promedio.toString());
-            contenedor_historico.addView(elemento);
+                LayoutInflater vista = LayoutInflater.from(getApplicationContext());
+                View elemento = vista.inflate(R.layout.item_historico, null, false);
+                TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
+                TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
+
+                texto_fecha.setText("Promedio de consumo");
+
+                promedio = promedio / historico_cfe.size();
+                texto_consumo.setText(promedio.toString());
+                contenedor_historico.addView(elemento);
+
+                Historico historico_promedio = new Historico();
+                historico_promedio.setFecha("Promedio de consumo");
+                historico_promedio.setConsumo(promedio);
+                historico_cfe.add(historico_promedio);
+
+                String json_historico_cfe = gson.toJson(historico_cfe);
+                database.saveElement(clave_ultimo_archivo, ultimo_archivo_ubicacion);
+                database.saveElement(clave_historico, json_historico_cfe);
+            }
+
 
         }
     }
@@ -485,7 +595,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        System.out.println("calling resume");
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
+        revisar_historico_cfe_guardado(database, boton_historico_cfe);
+
+        if(checkbox_propietario.isChecked()) {
+            cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
+            cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
+        }else{
+            cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
+            cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
+        }
 
     }
 }

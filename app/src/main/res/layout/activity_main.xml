@@ -154,9 +154,11 @@
                     android:id="@+id/lista_historico"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/contenedor_historico_cfe"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical"
-                    android:paddingTop="5dp"
-                    android:layout_below="@id/contenedor_historico_cfe">
+                    android:paddingTop="10dp"
+                    android:visibility="gone">
 
                 </LinearLayout>
 

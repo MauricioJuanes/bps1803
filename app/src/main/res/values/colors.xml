@@ -7,7 +7,7 @@
     <color name="colorTitle">#000000</color>
     <color name="colorDescription">#666666</color>
     <color name="colorInactive">#e0e0e0</color>
-
+    <color name="colorBackgroundText">#edeeef</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="background">#e5e5e5</color>
     <color name="half_black">#808080</color>
