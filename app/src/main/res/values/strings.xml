@@ -23,5 +23,6 @@
     <string name="message_error_calculating_area">No se ha podido calcular el área seleccionada</string>
     <string name="message_error_less_markers_on_map">No se puede calcular el área con menos de tres marcadores en el mapa</string>
     <string name="message_loading_map">Cargando mapa</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDPG38NE2rb62c35gsod8sx-H35QA8iKK4</string>
 
 </resources>
