@@ -49,10 +49,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.Places;
 import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 import com.prototipo.prototipo.prototipo.R;
 
@@ -97,6 +93,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private Place searchedLocation;
     private Boolean isSearchng = false;
+
+    //clear map screen
+    private Location savedLocationBeforeClear;
+    private Boolean isCleaningScreen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,8 +188,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isSearchng = true;
                 searchLocation();
+                floatingActionsMenu.collapse();
+
+            }
+        });
+
+        FloatingActionButton clearScreenMapButton = findViewById(R.id.action_clearMap);
+        clearScreenMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                clearScreenMap();
                 floatingActionsMenu.collapse();
 
             }
@@ -219,16 +229,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mCurrentLocation = result.getLocations().get(0);
                 mMap.clear();
 
-                if(mCurrentLocation!=null)
-                {
-                    Log.e("Location(Lat)==",""+mCurrentLocation.getLatitude());
-                    Log.e("Location(Long)==",""+mCurrentLocation.getLongitude());
-                }
-
                 String currentPositionMarkerTitle = getApplicationContext().getString(R.string.current_user_position_title);
                 if (isSearchng){
                     mCurrentLocation.setLatitude(searchedLocation.getLatLng().latitude);
                     mCurrentLocation.setLongitude(searchedLocation.getLatLng().longitude);
+                    savedLocationBeforeClear = mCurrentLocation;
                     currentPositionMarkerTitle = searchedLocation.getName().toString();
                     isSearchng = false;
                 }else{
@@ -236,14 +241,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if(lastPositionSaved.latitude != 0.0 && lastPositionSaved.longitude != 0.0 && isShowingLastPosition){
                         mCurrentLocation.setLatitude(lastPositionSaved.latitude);
                         mCurrentLocation.setLongitude(lastPositionSaved.longitude);
+                        savedLocationBeforeClear = mCurrentLocation;
                         List<LatLng> restoredPositions;
                         restoredPositions = database.getAreaMarkers();
                         for (int i=0; i<restoredPositions.size();i++){
                             drawMarker(restoredPositions.get(i));
                         }
+                    }else{
+                        savedLocationBeforeClear = mCurrentLocation;
                     }
                 }
 
+                if (isCleaningScreen){
+                    isCleaningScreen = false;
+                    mCurrentLocation = savedLocationBeforeClear;
+                    mMap.clear();
+                }
 
 
                 MarkerOptions options = new MarkerOptions();
@@ -537,6 +550,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void searchLocation(){
+        isSearchng = true;
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
@@ -567,8 +581,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    public void clearMap(){
-
+    public void clearScreenMap(){
+        isCleaningScreen = true;
+        markerPosition = new ArrayList<>();
+        markerIcons = new ArrayList<>();
+        perimeterLines = new ArrayList<>();
+        initGoogleMapLocation();
     }
 
     @Override
