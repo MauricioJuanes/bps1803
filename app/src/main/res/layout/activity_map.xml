@@ -19,10 +19,12 @@
         fab:fab_labelStyle="@style/Etiquetas"
         fab:fab_labelsPosition="left">
 
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_showLastLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_size="mini"
             fab:fab_colorNormal="?attr/colorAccent"
             fab:fab_icon="@drawable/clock"
             fab:fab_title="@string/show_last_location" />
@@ -31,14 +33,34 @@
             android:id="@+id/action_showCurrentLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_size="mini"
             fab:fab_colorNormal="?attr/colorAccent"
             fab:fab_icon="@drawable/gps"
             fab:fab_title="@string/Show_current_location" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_clearMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="?attr/colorAccent"
+            fab:fab_icon="@drawable/clock"
+            fab:fab_title="@string/clear_map" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_searchLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="?attr/colorAccent"
+            fab:fab_icon="@drawable/clock"
+            fab:fab_title="@string/search_location" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_calculateArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_size="mini"
             fab:fab_colorNormal="?attr/colorAccent"
             fab:fab_icon="@drawable/area"
             fab:fab_title="@string/calculate_location_area" />

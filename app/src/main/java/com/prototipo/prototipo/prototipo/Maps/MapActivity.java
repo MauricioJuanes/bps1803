@@ -2,6 +2,7 @@ package com.prototipo.prototipo.prototipo.Maps;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -18,7 +19,10 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -29,6 +33,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +49,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.Places;
 import com.prototipo.prototipo.prototipo.DataPersistence.Database;
 import com.prototipo.prototipo.prototipo.R;
 
@@ -83,6 +93,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ArrayList<Marker> markerIcons = new ArrayList<>(); //marcadores
     private ArrayList<Polyline> perimeterLines = new ArrayList<>(); //lineas
 
+    //Search locations variables
+    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private Place searchedLocation;
+    private Boolean isSearchng = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +184,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        FloatingActionButton searchLocationButton = findViewById(R.id.action_searchLocation);
+        searchLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSearchng = true;
+                searchLocation();
+                floatingActionsMenu.collapse();
+
+            }
+        });
+
     }
 
     private void checkMyPermissionLocation() {
@@ -200,21 +225,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Log.e("Location(Long)==",""+mCurrentLocation.getLongitude());
                 }
 
-                LatLng lastPositionSaved = database.getLastPosition();
-                if(lastPositionSaved.latitude != 0.0 && lastPositionSaved.longitude != 0.0 && isShowingLastPosition){
-                    mCurrentLocation.setLatitude(lastPositionSaved.latitude);
-                    mCurrentLocation.setLongitude(lastPositionSaved.longitude);
-                    List<LatLng> restoredPositions;
-                    restoredPositions = database.getAreaMarkers();
-                    for (int i=0; i<restoredPositions.size();i++){
-                        drawMarker(restoredPositions.get(i));
+                String currentPositionMarkerTitle = getApplicationContext().getString(R.string.current_user_position_title);
+                if (isSearchng){
+                    mCurrentLocation.setLatitude(searchedLocation.getLatLng().latitude);
+                    mCurrentLocation.setLongitude(searchedLocation.getLatLng().longitude);
+                    currentPositionMarkerTitle = searchedLocation.getName().toString();
+                    isSearchng = false;
+                }else{
+                    LatLng lastPositionSaved = database.getLastPosition();
+                    if(lastPositionSaved.latitude != 0.0 && lastPositionSaved.longitude != 0.0 && isShowingLastPosition){
+                        mCurrentLocation.setLatitude(lastPositionSaved.latitude);
+                        mCurrentLocation.setLongitude(lastPositionSaved.longitude);
+                        List<LatLng> restoredPositions;
+                        restoredPositions = database.getAreaMarkers();
+                        for (int i=0; i<restoredPositions.size();i++){
+                            drawMarker(restoredPositions.get(i));
+                        }
                     }
-
-
                 }
 
+
+
                 MarkerOptions options = new MarkerOptions();
-                options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(getApplicationContext().getString(R.string.current_user_position_title));
+                options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(currentPositionMarkerTitle);
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 options.icon(icon);
                 currentPositionmarker = mMap.addMarker(options);
@@ -500,6 +533,41 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         initGoogleMapLocation();
 
 
+
+    }
+
+    private void searchLocation(){
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                searchedLocation = PlaceAutocomplete.getPlace(this, data);
+                markerPosition = new ArrayList<>();
+                markerIcons = new ArrayList<>();
+                perimeterLines = new ArrayList<>();
+                initGoogleMapLocation();
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                System.out.println("########## ##########################" + status.getStatusMessage());
+                Toast.makeText(getApplicationContext(), R.string.message_error_searching, Toast.LENGTH_SHORT );
+                isSearchng = false;
+            } else if (resultCode == RESULT_CANCELED) {
+                isSearchng = false;
+            }
+        }
+    }
+
+    public void clearMap(){
 
     }
 

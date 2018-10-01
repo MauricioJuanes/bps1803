@@ -15,6 +15,8 @@
     <string name="current_user_position_title">Tu ubicación actual</string>
     <string name="calculate_location_area">Calcular área</string>
     <string name="show_last_location">Mostrar última ubicación</string>
+    <string name="search_location">Buscar ubicación</string>
+    <string name="clear_map">Limpiar pantalla</string>
     <string name="Show_current_location">Mostrar ubicación actual</string>
     <string name="message_showing_current_location">Mostrando ubicación actual</string>
     <string name="message_showing_last_location">Mostrando ùlitma ubicación</string>
@@ -23,6 +25,8 @@
     <string name="message_error_calculating_area">No se ha podido calcular el área seleccionada</string>
     <string name="message_error_less_markers_on_map">No se puede calcular el área con menos de tres marcadores en el mapa</string>
     <string name="message_loading_map">Cargando mapa</string>
+    <string name="message_error_searching">Ha ocurrido un error durante la bísqueda</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDPG38NE2rb62c35gsod8sx-H35QA8iKK4</string>
+
 
 </resources>
