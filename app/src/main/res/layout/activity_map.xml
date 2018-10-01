@@ -9,8 +9,6 @@
     tools:context=".Maps.MapActivity"
     android:theme="@style/AppTheme">
 
-
-
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/menu_fab"
         android:layout_width="wrap_content"

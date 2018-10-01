@@ -64,9 +64,6 @@ public class Database {
         Editor editor = db.edit();
         editor.putString("positionMarkersOnMap", new Gson().toJson(positionMarkersOnMap));
         editor.apply();
-        System.out.println("#####################################################################");
-        System.out.println("Almacenando posiciones en json"+new Gson().toJson(positionMarkersOnMap));
-        System.out.println("#####################################################################");
     }
 
     public List<LatLng> getAreaMarkers(){

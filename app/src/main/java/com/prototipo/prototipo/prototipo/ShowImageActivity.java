@@ -78,10 +78,6 @@ public class ShowImageActivity extends AppCompatActivity {
         imagen.setImageBitmap(bitmap);
 
 
-
-
-
-
     }
 
 
