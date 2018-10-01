@@ -559,7 +559,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 System.out.println("########## ##########################" + status.getStatusMessage());
-                Toast.makeText(getApplicationContext(), R.string.message_error_searching, Toast.LENGTH_SHORT );
+                Toast.makeText(getApplicationContext(), R.string.message_error_searching, Toast.LENGTH_SHORT ).show();
                 isSearchng = false;
             } else if (resultCode == RESULT_CANCELED) {
                 isSearchng = false;
