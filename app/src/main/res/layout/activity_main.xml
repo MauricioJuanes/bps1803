@@ -173,6 +173,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_component"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="10dp">
 
                 <RelativeLayout
