@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             fab:fab_size="mini"
             fab:fab_colorNormal="?attr/colorAccent"
-            fab:fab_icon="@drawable/clock"
+            fab:fab_icon="@drawable/clear"
             fab:fab_title="@string/clear_map" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             fab:fab_size="mini"
             fab:fab_colorNormal="?attr/colorAccent"
-            fab:fab_icon="@drawable/clock"
+            fab:fab_icon="@drawable/search"
             fab:fab_title="@string/search_location" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
