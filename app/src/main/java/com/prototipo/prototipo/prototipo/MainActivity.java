@@ -29,6 +29,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import java.io.FileNotFoundException;
@@ -429,30 +431,38 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Double promedio = 0.0;
+            int contador_interno = 0;
 
-
+            ArrayList<Historico> historico_filtrado = new ArrayList<>();
 
             for(int index = 0; index < historico_cfe.size(); index ++){
-                LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
+                if(historico_cfe.get(index).getConsumo() > 0){
+                    historico_filtrado.add(historico_cfe.get(index));
+                    contador_interno += 1;
+
+                    LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
 
 
-                LayoutInflater vista = LayoutInflater.from(getApplicationContext());
-                View elemento = vista.inflate(R.layout.item_historico, null, false);
-                RelativeLayout contenedor_item_historico = elemento.findViewById(R.id.container_item_historico);
-                TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
-                TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
+                    LayoutInflater vista = LayoutInflater.from(getApplicationContext());
+                    View elemento = vista.inflate(R.layout.item_historico, null, false);
+                    RelativeLayout contenedor_item_historico = elemento.findViewById(R.id.container_item_historico);
+                    TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
+                    TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
 
-                texto_fecha.setText(historico_cfe.get(index).getFecha());
-                texto_consumo.setText(historico_cfe.get(index).getConsumo().toString());
-                promedio += historico_cfe.get(index).getConsumo();
+                    texto_fecha.setText(historico_cfe.get(index).getFecha());
+                    texto_consumo.setText(historico_cfe.get(index).getConsumo().toString());
+                    promedio += historico_cfe.get(index).getConsumo();
 
-                if(index%2 == 0)
-                    contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
-                contenedor_historico.addView(elemento);
+                    if(contador_interno%2 == 0)
+                        contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
+                    contenedor_historico.addView(elemento);
+
+                }
+
 
             }
 
-            if(historico_cfe.size() > 0){
+            if(historico_filtrado.size() > 0){
                 boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
                 boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
                 boton_historico_cfe.setTag("View");
@@ -469,18 +479,22 @@ public class MainActivity extends AppCompatActivity {
 
                 texto_fecha.setText("Promedio de consumo");
 
-                promedio = promedio / historico_cfe.size();
+                promedio = promedio / historico_filtrado.size();
+                promedio = new  BigDecimal(promedio.toString()).setScale(2,RoundingMode.HALF_UP).doubleValue();
                 texto_consumo.setText(promedio.toString());
                 contenedor_historico.addView(elemento);
 
                 Historico historico_promedio = new Historico();
                 historico_promedio.setFecha("Promedio de consumo");
                 historico_promedio.setConsumo(promedio);
-                historico_cfe.add(historico_promedio);
+                historico_filtrado.add(historico_promedio);
 
-                String json_historico_cfe = gson.toJson(historico_cfe);
+                String json_historico_cfe = gson.toJson(historico_filtrado);
                 database.saveElement(clave_ultimo_archivo, ultimo_archivo_ubicacion);
                 database.saveElement(clave_historico, json_historico_cfe);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "No se pudo recuperar el histórico", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -522,8 +536,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
+
         StringBuilder message = new StringBuilder("I found these things:\n\n");
         Integer contador_maximo = 0;
+        historico_cfe = new ArrayList<>();
+
+        try {
+
 
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
@@ -531,7 +550,7 @@ public class MainActivity extends AppCompatActivity {
         String [] tokens = texto.split("\n");
         ArrayList<String> historico_fechas = new ArrayList<>();
         ArrayList<Double> historico_consumos= new ArrayList<>();
-        historico_cfe = new ArrayList<>();
+
 
 
         for (int index = 0; index < tokens.length; index++ ){
@@ -573,6 +592,10 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             message.append("nothing");
+        }
+        }
+        catch (Exception exception){
+
         }
 
         return message.toString();

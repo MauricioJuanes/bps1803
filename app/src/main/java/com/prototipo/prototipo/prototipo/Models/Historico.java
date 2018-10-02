@@ -1,5 +1,8 @@
 package com.prototipo.prototipo.prototipo.Models;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Historico {
     private String fecha;
     private Double consumo;
@@ -18,7 +21,7 @@ public class Historico {
     }
 
     public Double getConsumo() {
-        return consumo;
+        return new BigDecimal(consumo.toString()).setScale(2,RoundingMode.HALF_UP).doubleValue();
     }
 
     public void setConsumo(Double consumo) {
