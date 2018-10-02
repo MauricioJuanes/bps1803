@@ -236,6 +236,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     savedLocationBeforeClear = mCurrentLocation;
                     currentPositionMarkerTitle = searchedLocation.getName().toString();
                     isSearchng = false;
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(currentPositionMarkerTitle);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                    options.icon(icon);
+                    currentPositionmarker = mMap.addMarker(options);
                 }else{
                     LatLng lastPositionSaved = database.getLastPosition();
                     if(lastPositionSaved.latitude != 0.0 && lastPositionSaved.longitude != 0.0 && isShowingLastPosition){
@@ -249,6 +254,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }else{
                         savedLocationBeforeClear = mCurrentLocation;
+                        MarkerOptions options = new MarkerOptions();
+                        options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(currentPositionMarkerTitle);
+                        BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                        options.icon(icon);
+                        currentPositionmarker = mMap.addMarker(options);
                     }
                 }
 
@@ -256,14 +266,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     isCleaningScreen = false;
                     mCurrentLocation = savedLocationBeforeClear;
                     mMap.clear();
+                    markerPosition = new ArrayList<>();
+                    markerIcons = new ArrayList<>();
+                    perimeterLines = new ArrayList<>();
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(currentPositionMarkerTitle);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                    options.icon(icon);
+                    currentPositionmarker = mMap.addMarker(options);
                 }
 
-
-                MarkerOptions options = new MarkerOptions();
-                options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title(currentPositionMarkerTitle);
-                BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                options.icon(icon);
-                currentPositionmarker = mMap.addMarker(options);
                 LatLng position = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 20));
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
@@ -463,7 +475,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Toast.makeText(this.context,R.string.message_error_less_markers_on_map, Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this.context,R.string.message_calculating_area, Toast.LENGTH_SHORT).show();
-            String savedPosition = mCurrentLocation.getLatitude()+","+mCurrentLocation.getLongitude();
+            String savedPosition = markerPosition.get(0).latitude+","+markerPosition.get(0).longitude;
             database.saveCalculatedArea(computeArea(this.markerPosition));
             database.saveCurrentPosition(savedPosition);
             database.saveAreaMarkers(markerPosition);
@@ -572,7 +584,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 initGoogleMapLocation();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                System.out.println("########## ##########################" + status.getStatusMessage());
                 Toast.makeText(getApplicationContext(), R.string.message_error_searching, Toast.LENGTH_SHORT ).show();
                 isSearchng = false;
             } else if (resultCode == RESULT_CANCELED) {
@@ -583,9 +594,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void clearScreenMap(){
         isCleaningScreen = true;
-        markerPosition = new ArrayList<>();
-        markerIcons = new ArrayList<>();
-        perimeterLines = new ArrayList<>();
         initGoogleMapLocation();
     }
 
