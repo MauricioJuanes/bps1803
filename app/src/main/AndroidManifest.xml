@@ -20,7 +20,9 @@
         android:hardwareAccelerated="false"
         android:largeHeap="true"
         >
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,12 +33,14 @@
         <activity
             android:name=".Maps.MapActivity"
             android:label="@string/title_activity_map"
-            android:parentActivityName="com.prototipo.prototipo.prototipo.MainActivity" />
+            android:parentActivityName="com.prototipo.prototipo.prototipo.MainActivity"
+            android:screenOrientation="portrait"/>
         <!-- Parent activity meta-data to support 4.0 and lower -->
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.prototipo.prototipo.prototipo.MainActivity" />
-        <activity android:name=".ShowImageActivity"/>
+        <activity android:name=".ShowImageActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
