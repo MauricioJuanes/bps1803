@@ -8,8 +8,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="495dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,33 +19,154 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/survey_field_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/border_component"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="visible">
 
                 <TextView
-                    android:id="@+id/lbl_propietario"
+                    android:id="@+id/lbl_survey_field_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_owner"
+                    android:text="@string/survey_field_1"
                     android:textColor="@color/colorTitle"
-                    android:textSize="18dp" />
+                    android:textSize="18sp" />
 
-                <CheckBox
-                    android:id="@+id/chk_propietario"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spinner_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/survey_field_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_component"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/lbl_survey_field_2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:hapticFeedbackEnabled="false"
-                    android:text="@string/checkbox_label_owner"
-                    android:textColor="@color/colorDescription"
-                    android:translationX="-12px" />
+                    android:text="@string/survey_field_2"
+                    android:textColor="@color/colorTitle"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/rad_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/rad_field_2_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_1" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_2_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_2" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_2_nose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_3" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/survey_field_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_component"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/lbl_survey_field_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/survey_field_3"
+                    android:textColor="@color/colorTitle"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/survey_field_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_component"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/lbl_survey_field_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/survey_field_4"
+                    android:textColor="@color/colorTitle"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/rad_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/rad_field_4_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_1" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_4_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_2" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_4_nose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_3" />
+
+                </RadioGroup>
+
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/survey_field_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -65,9 +187,9 @@
                         android:id="@+id/lbl_mapa_area_local"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_local_space"
+                        android:text="@string/survey_field_5"
                         android:textColor="@color/colorTitle"
-                        android:textSize="18dp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/lbl_mapa_area_local_descripcion"
@@ -88,8 +210,8 @@
                         android:id="@+id/btn_mapa_area_local"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
                         android:background="@drawable/round_button_active"
@@ -100,6 +222,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/survey_field_6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -119,9 +242,9 @@
                         android:id="@+id/lbl_historico_cfe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_historico_cfe"
+                        android:text="@string/survey_field_6"
                         android:textColor="@color/colorTitle"
-                        android:textSize="18dp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/lbl_historico_cfe_descripcion"
@@ -165,6 +288,174 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/survey_field_7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/border_component"
+                android:padding="10dp">
+
+                <RelativeLayout
+                    android:id="@+id/contenedor_consumo_de_luz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/survey_field_7"
+                        android:textColor="@color/colorTitle"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_7_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lbl_survey_field_7"
+                        android:text="@string/label_frente_recibo_cfe_descripcion"
+                        android:textColor="@color/colorDescription" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/btn_consumo_de_luz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:background="@drawable/round_button_active"
+                        app:srcCompat="@mipmap/angle_right" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/survey_field_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/border_component"
+                android:padding="10dp">
+
+                <RelativeLayout
+                    android:id="@+id/contenedor_ine_frente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/survey_field_8"
+                        android:textColor="@color/colorTitle"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_8_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lbl_survey_field_8"
+                        android:text="@string/label_frente_recibo_cfe_descripcion"
+                        android:textColor="@color/colorDescription" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/btn_ine_frente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:background="@drawable/round_button_active"
+                        app:srcCompat="@mipmap/angle_right" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/survey_field_9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/border_component"
+                android:padding="10dp">
+
+                <RelativeLayout
+                    android:id="@+id/contenedor_ine_atras"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/survey_field_9"
+                        android:textColor="@color/colorTitle"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/lbl_survey_field_9_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lbl_survey_field_9"
+                        android:text="@string/label_frente_recibo_cfe_descripcion"
+                        android:textColor="@color/colorDescription" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/btn_ine_atras"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:background="@drawable/round_button_active"
+                        app:srcCompat="@mipmap/angle_right" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -173,8 +464,8 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_component"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -188,7 +479,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_frente_recibo_cfe"
                         android:textColor="@color/colorTitle"
-                        android:textSize="18dp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/lbl_frente_recibo_cfe_descripcion"
@@ -217,9 +508,7 @@
             </LinearLayout>
 
 
-
         </LinearLayout>
-
 
 
     </ScrollView>

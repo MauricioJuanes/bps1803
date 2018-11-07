@@ -18,11 +18,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
@@ -74,7 +77,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton boton_frente_recibo_cfe;
     private ImageButton boton_mapa_area_local;
     private TextView texto_mapa_area_local_descripcion;
-    private CheckBox checkbox_propietario;
+    private Spinner clientSpinner;
+    private Spinner doorSpinner;
+    private RadioGroup rdgPropietario;
+    private RadioGroup rdgCredito;
+//    private CheckBox checkbox_propietario;
     private Uri archivo;
     private Database database;
     private String ultimo_archivo_ubicacion;
@@ -114,12 +121,17 @@ public class MainActivity extends AppCompatActivity {
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
         boton_mapa_area_local = findViewById(R.id.btn_mapa_area_local);
-        checkbox_propietario = findViewById(R.id.chk_propietario);
+//        checkbox_propietario = findViewById(R.id.chk_propietario);
         texto_mapa_area_local_descripcion = findViewById(R.id.lbl_mapa_area_local_descripcion);
 
-        cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
-        cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
-        cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
+        clientSpinner = findViewById(R.id.spinner_1);
+        doorSpinner = findViewById(R.id.spinner_3);
+        rdgPropietario = findViewById(R.id.rad_2);
+        rdgCredito = findViewById(R.id.rad_4);
+
+        cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
+        cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
+        cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
 
         //revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
@@ -138,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        checkbox_propietario.setOnClickListener(new View.OnClickListener() {
+/*        checkbox_propietario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkbox_propietario.isChecked()){
@@ -158,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
                 }
             }
-        });
+        });*/
 
         boton_historico_cfe.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,6 +193,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Aqui va lo de los spinners
+        String[] clientes = {"eduardo","juan","yasbedh","julio","andres"};
+        clientSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientes));
+        String[] puertas = {"1","2","3","4","5"};
+        doorSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, puertas));
     }
 
     public void revisar_historico_cfe_guardado(Database database, ImageButton boton){
@@ -224,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 boton.setTag("View");
             }
 
-            if(checkbox_propietario.isChecked()) {
+/*            if(checkbox_propietario.isChecked()) {
                 boton.setEnabled(Boolean.TRUE);
                 boton.setBackgroundColor(getResources().getColor(R.color.colorBackground));
 
@@ -232,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 boton.setEnabled(Boolean.FALSE);
                 boton.setBackground(getDrawable(R.drawable.round_button_inactive));
 
-            }
+            }*/
         }
         else{
 
@@ -240,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
             TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
             texto_historico_cfe_descripcion.setText(R.string.label_frente_recibo_cfe_descripcion);
 
-            if(checkbox_propietario.isChecked()) {
+/*            if(checkbox_propietario.isChecked()) {
                 boton.setEnabled(Boolean.TRUE);
                 boton.setBackground(getDrawable(R.drawable.round_button_active));
                 boton.setImageResource(R.mipmap.angle_right);
@@ -250,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 boton.setBackground(getDrawable(R.drawable.round_button_inactive));
                 boton.setImageResource(R.mipmap.angle_right);
                 boton.setTag("");
-            }
+            }*/
         }
     }
 
@@ -629,14 +646,19 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
         revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
-        if(checkbox_propietario.isChecked()) {
+/*        if(checkbox_propietario.isChecked()) {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
             cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
         }else{
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
             cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
-        }
+        }*/
 
     }
 
+    public void clearSurvey(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
 }
