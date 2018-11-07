@@ -218,7 +218,9 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v){
-                        sendSurvey();
+                        if(isValidSurvey()){
+                            sendSurvey();
+                        }
                     }
                 }
         );
@@ -712,11 +714,23 @@ public class MainActivity extends AppCompatActivity {
     public  void sendSurvey(){
         if(isValidSurvey())
         {
-            /*// get selected radio button from radioGroup
-            int selectedId = rdgPropietario.getCheckedRadioButtonId();
-            // find the radiobutton by returned id
-            RadioButton selectedRadioButton = (RadioButton)findViewById(selectedId);
-            Toast.makeText(getApplicationContext(), selectedRadioButton.getText().toString()+" is selected", Toast.LENGTH_SHORT).show();*/
+            String name;
+            String isOwner;
+            String extraDoors;
+            String isBureauAuthorized;
+            String roofArea;
+            String roofCorners;
+
+            RadioButton selectedRadioButton;
+
+            name = clientSpinner.getSelectedItem().toString();
+            selectedRadioButton = findViewById(rdgPropietario.getCheckedRadioButtonId());
+            isOwner = selectedRadioButton.getText().toString();
+            extraDoors = doorSpinner.getSelectedItemPosition()+"";
+            selectedRadioButton = findViewById(rdgCredito.getCheckedRadioButtonId());
+            isBureauAuthorized = selectedRadioButton.getText().toString();
+            roofArea = database.getCalculatedArea()+"";
+            roofCorners = database.getRawAreaMarkers();
         }
     }
 

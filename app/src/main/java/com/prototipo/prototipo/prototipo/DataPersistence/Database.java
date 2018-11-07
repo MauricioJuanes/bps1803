@@ -77,6 +77,12 @@ public class Database {
         return positionsArray;
     }
 
+    public String getRawAreaMarkers(){
+        String positions = db.getString("positionMarkersOnMap", "");
+
+        return positions;
+    }
+
     public void DeleteElement(String name){
         Editor editor = db.edit();
         editor.remove(name);
