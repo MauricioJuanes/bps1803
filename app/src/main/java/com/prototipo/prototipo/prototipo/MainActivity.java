@@ -864,7 +864,7 @@ public class MainActivity extends AppCompatActivity {
     private void enviarCorreoFormulario(Survey survey) {
 
         String[] TO = {"sky_lab_beto@hotmail.com"}; //Direcciones email  a enviar.
-        String[] CC = {"henry@gant.mx", "vmendoza@walook.com.mx", "juanesmauricio@gmail.com"}; //Direcciones email con copia.
+        String[] CC = {}; //Direcciones email con copia.
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
@@ -872,8 +872,8 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_historico);
         emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Consumo);
         emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_frente);
-        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_atras);
         emailIntent.setType("image/jpeg");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_atras);
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
@@ -885,7 +885,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("EMAIL", "Enviando email...");
         }
         catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(this, "NO existe ningún cliente de email instalado!.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No  existe ningún cliente de email instalado!.", Toast.LENGTH_SHORT).show();
         }
     }
 

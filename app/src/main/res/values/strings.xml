@@ -24,7 +24,7 @@
     <string name="message_error_less_markers_on_map">No se puede calcular el área con menos de tres marcadores en el mapa</string>
     <string name="message_loading_map">Cargando mapa</string>
     <string name="message_error_searching">Ha ocurrido un error durante la bísqueda</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDPG38NE2rb62c35gsod8sx-H35QA8iKK4</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
 
     <string name="survey_field_1">1.- Cliente</string>
     <string name="survey_field_2">2.- ¿Es propietario del predio?</string>
