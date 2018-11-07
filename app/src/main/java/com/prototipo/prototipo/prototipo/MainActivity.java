@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -709,7 +710,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void sendSurvey(){
-
+        if(isValidSurvey())
+        {
+            /*// get selected radio button from radioGroup
+            int selectedId = rdgPropietario.getCheckedRadioButtonId();
+            // find the radiobutton by returned id
+            RadioButton selectedRadioButton = (RadioButton)findViewById(selectedId);
+            Toast.makeText(getApplicationContext(), selectedRadioButton.getText().toString()+" is selected", Toast.LENGTH_SHORT).show();*/
+        }
     }
 
     public  void askConfirmation(String title, String message){
@@ -732,5 +740,27 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    public boolean isValidSurvey(){
+        String uncheckedFields = "";
+        if(rdgPropietario.getCheckedRadioButtonId()==-1)
+        {
+            uncheckedFields += "2, ";
+        }
+        if (rdgCredito.getCheckedRadioButtonId()==-1){
+            uncheckedFields += "4, ";
+        }
+        if (database.getCalculatedArea() == 0){
+            uncheckedFields += "5, ";
+        }
+
+        if (uncheckedFields.equals("")){
+            return true;
+        }else{
+            Toast.makeText(getApplicationContext(), "No respondio el(los) campo(s) " + uncheckedFields + "revise la encuesta", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
     }
 }
