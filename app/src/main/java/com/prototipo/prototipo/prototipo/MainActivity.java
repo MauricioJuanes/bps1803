@@ -322,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         Type historico_lista_tipo = new TypeToken<ArrayList<Historico>>(){}.getType();
         if(historico != null && imagen != null && historico.isEmpty() == false && imagen.isEmpty() == false){
             File imagen_archivo = new File(imagen);
+            ruta_foto_historico = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagen_archivo);
             ArrayList<Historico> lista_historico = gson.fromJson(historico, historico_lista_tipo);
 
             if( lista_historico != null && lista_historico.size() > 0){
@@ -863,17 +864,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void enviarCorreoFormulario(Survey survey) {
 
-        String[] TO = {"sky_lab_beto@hotmail.com"}; //Direcciones email  a enviar.
+        String[] TO = {"solanummx@gmail.com"}; //Direcciones email  a enviar.
         String[] CC = {}; //Direcciones email con copia.
 
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
 
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_historico);
-        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Consumo);
-        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_frente);
-        emailIntent.setType("image/jpeg");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_atras);
+        ArrayList<Uri> uris = new ArrayList<Uri>();
+        uris.add(ruta_foto_historico);
+        uris.add(ruta_foto_Consumo);
+        uris.add(ruta_foto_Ine_frente);
+        uris.add(ruta_foto_Ine_atras);
+
+        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
+
+        emailIntent.setType("image/*");
+
+
+
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);

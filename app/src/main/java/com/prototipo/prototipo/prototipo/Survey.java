@@ -26,6 +26,10 @@ public class Survey {
         this.energyConsumption = energyConsumption;
         this.idFront = idFront;
         this.idBack = idBack;
+        System.out.println(history);
+        System.out.println(energyConsumption);
+        System.out.println(idFront);
+        System.out.println(idBack);
     }
 
     @Override
