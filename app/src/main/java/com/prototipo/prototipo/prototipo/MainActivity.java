@@ -878,9 +878,6 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
 
         emailIntent.setType("image/*");
-
-
-
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
