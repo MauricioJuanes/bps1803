@@ -1,7 +1,6 @@
 package com.prototipo.prototipo.prototipo;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,8 +38,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -75,12 +71,19 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private boolean close = false;
-    private  static final int REQUEST_CODE = 1;
+    private boolean isHistoric = false;
+    private  static final int GUARDAR_FOTO_HISTORICO = 1;
+    private  static final int GUARDAR_FOTO_CONSUMO = 2;
+    private  static final int GUARDAR_INE_FRENTE = 3;
+    private  static final int GUARDAR_INE_ATRAS = 4;
     private Bitmap bitmap;
     private ImageView imageView;
     private ImageButton boton_historico_cfe;
     private ImageButton boton_frente_recibo_cfe;
     private ImageButton boton_mapa_area_local;
+    private ImageButton boton_consumo_de_luz;
+    private ImageButton boton_ine_frente;
+    private ImageButton boton_ine_atras;
     private TextView texto_mapa_area_local_descripcion;
 
     private Spinner clientSpinner;
@@ -91,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_LimpiarCampos;
     private Button btn_Salir;
 //    private CheckBox checkbox_propietario;
-    private Uri archivo;
-    private Database database;
-    private String ultimo_archivo_ubicacion;
+    private Uri ruta_foto_historico;
+    private String ultima_foto_Historico;
     public ArrayList<Historico> historico_cfe;
+
+    private Database database;
 
     private String[] puertas;
     public static final int INDEX_ZERO = 0;
@@ -113,9 +117,16 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_IMAGE_REQUEST = 3;
     public String clave_historico = "clave_historico";
     public String clave_ultimo_archivo = "clave_ultimo_archivo";
+    public Uri ultima_foto_ruta;
 
     private Gson gson;
 
+    private Uri ruta_foto_Consumo;
+    private String ultima_foto_Consumo;
+    private Uri ruta_foto_Ine_frente;
+    private String ultima_foto_ine_frente;
+    private Uri ruta_foto_Ine_atras;
+    private String ultima_foto_ine_atras;
 
 
     @Override
@@ -131,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
         database = new Database(this.getApplicationContext());
         gson = new Gson();
         boton_historico_cfe = findViewById(R.id.btn_historico_cfe);
+        boton_consumo_de_luz = findViewById(R.id.btn_consumo_de_luz);
+        boton_ine_frente = findViewById(R.id.btn_ine_frente);
+        boton_ine_atras = findViewById(R.id.btn_ine_atras);
         boton_frente_recibo_cfe = findViewById(R.id.btn_frente_recibo_cfe);
         boton_mapa_area_local = findViewById(R.id.btn_mapa_area_local);
 //        checkbox_propietario = findViewById(R.id.chk_propietario);
@@ -195,14 +209,67 @@ public class MainActivity extends AppCompatActivity {
                         Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
                         verImagen.putExtra("imagen",database.getElement(clave_ultimo_archivo));
                         startActivity(verImagen);
-
-
                     }
                     else
-                        tomarFotografia();
+                        tomarFotografiaHistorico();
                 }
                 else{
-                    tomarFotografia();
+                    tomarFotografiaHistorico();
+                }
+
+            }
+        });
+        boton_consumo_de_luz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(boton_consumo_de_luz.getTag() != null){
+                    if( boton_consumo_de_luz.getTag() != null &&  boton_consumo_de_luz.getTag().toString().isEmpty() == false &&   boton_consumo_de_luz.getTag().toString().equalsIgnoreCase("View")){
+                        Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
+                        verImagen.putExtra("imagen",database.getElement("clave_consumo_luz"));
+                        startActivity(verImagen);
+                    }
+                    else
+                        tomarFotografiaConsumo();
+                }
+                else{
+                    tomarFotografiaConsumo();
+                }
+
+            }
+        });
+
+        boton_ine_frente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(boton_ine_frente.getTag() != null){
+                    if( boton_ine_frente.getTag() != null &&  boton_ine_frente.getTag().toString().isEmpty() == false &&   boton_ine_frente.getTag().toString().equalsIgnoreCase("View")){
+                        Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
+                        verImagen.putExtra("imagen",database.getElement("clave_ine_frente"));
+                        startActivity(verImagen);
+                    }
+                    else
+                        tomarFotografiaINEFrente();
+                }
+                else{
+                    tomarFotografiaINEFrente();
+                }
+
+            }
+        });
+        boton_ine_atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(boton_ine_atras.getTag() != null){
+                    if( boton_ine_atras.getTag() != null &&  boton_ine_atras.getTag().toString().isEmpty() == false &&   boton_ine_atras.getTag().toString().equalsIgnoreCase("View")){
+                        Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
+                        verImagen.putExtra("imagen",database.getElement("clave_ine_atras"));
+                        startActivity(verImagen);
+                    }
+                    else
+                        tomarFotografiaINEAtras();
+                }
+                else{
+                    tomarFotografiaINEAtras();
                 }
 
             }
@@ -318,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
 
     public File getCameraFile() {
         //((File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "\CameraDemo");
-        return new File( ultimo_archivo_ubicacion);
+        return new File(ultima_foto_Historico);
     }
 
     private void cambiarEstadoBoton(ImageButton boton, Boolean estado){
@@ -341,21 +408,74 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void tomarFotografia(){
+    private void tomarFotografiaHistorico(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagen = getOutputMediaFile();
-        ultimo_archivo_ubicacion = imagen.getAbsolutePath();
-        archivo = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagen);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, archivo);
-        startActivityForResult(intent, REQUEST_CODE);
+        File imagenHistorico = getOutputMediaFile();
+        ultima_foto_Historico = imagenHistorico.getAbsolutePath();
+        ruta_foto_historico = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenHistorico);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_historico);
+        ultima_foto_ruta =  ruta_foto_historico;
+        startActivityForResult(intent, GUARDAR_FOTO_HISTORICO);
+    }
+
+    private void tomarFotografiaConsumo(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagenConsumo = getOutputMediaFile();
+        ultima_foto_Consumo = imagenConsumo.getAbsolutePath();
+        ruta_foto_Consumo = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenConsumo);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Consumo);
+        ultima_foto_ruta = ruta_foto_Consumo;
+        startActivityForResult(intent,GUARDAR_FOTO_CONSUMO);
+    }
+
+    private void tomarFotografiaINEFrente(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagenINEFrente = getOutputMediaFile();
+        ultima_foto_ine_frente = imagenINEFrente.getAbsolutePath();
+        ruta_foto_Ine_frente = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenINEFrente);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Ine_frente);
+        ultima_foto_ruta = ruta_foto_Ine_frente;
+        startActivityForResult(intent,GUARDAR_INE_FRENTE);
+    }
+
+    private void tomarFotografiaINEAtras(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagenINEAtras = getOutputMediaFile();
+        ultima_foto_ine_atras = imagenINEAtras.getAbsolutePath();
+        ruta_foto_Ine_atras = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenINEAtras);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Ine_atras);
+        ultima_foto_ruta = ruta_foto_Ine_atras;
+        startActivityForResult(intent,GUARDAR_INE_ATRAS);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                uploadImage(archivo);
-            }
+
+        switch (requestCode){
+            case GUARDAR_FOTO_HISTORICO:
+                if (resultCode == RESULT_OK) {
+                    uploadImage(ultima_foto_ruta);
+                }
+                break;
+            case 2:
+                boton_consumo_de_luz.setBackgroundResource(R.color.colorBackground);
+                boton_consumo_de_luz.setImageResource(R.mipmap.eye_icon);
+                boton_consumo_de_luz.setTag("View");
+                database.saveElement("clave_consumo_luz", ultima_foto_Consumo);
+                break;
+            case 3:
+                boton_ine_frente.setBackgroundResource(R.color.colorBackground);
+                boton_ine_frente.setImageResource(R.mipmap.eye_icon);
+                boton_ine_frente.setTag("View");
+                database.saveElement("clave_ine_frente", ultima_foto_ine_frente);
+                break;
+            case 4:
+                boton_ine_atras.setBackgroundResource(R.color.colorBackground);
+                boton_ine_atras.setImageResource(R.mipmap.eye_icon);
+                boton_ine_atras.setTag("View");
+                database.saveElement("clave_ine_atras", ultima_foto_ine_atras);
+                break;
+            default:
         }
     }
 
@@ -363,13 +483,14 @@ public class MainActivity extends AppCompatActivity {
     public void uploadImage(Uri uri) {
         if (uri != null) {
             try {
-                // scale the image to save on bandwidth
-                Bitmap bitmap =
-                        scaleBitmapDown(
-                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
-                                MAX_DIMENSION);
 
-                callCloudVision(bitmap);
+                    // scale the image to save on bandwidth
+                    Bitmap bitmap =
+                            scaleBitmapDown(
+                                    MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
+                                    MAX_DIMENSION);
+
+                    callCloudVision(bitmap);
 
 
             } catch (IOException e) {
@@ -552,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
                 historico_filtrado.add(historico_promedio);
 
                 String json_historico_cfe = gson.toJson(historico_filtrado);
-                database.saveElement(clave_ultimo_archivo, ultimo_archivo_ubicacion);
+                database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
                 database.saveElement(clave_historico, json_historico_cfe);
             }
             else{
@@ -731,6 +852,40 @@ public class MainActivity extends AppCompatActivity {
             isBureauAuthorized = selectedRadioButton.getText().toString();
             roofArea = database.getCalculatedArea()+"";
             roofCorners = database.getRawAreaMarkers();
+
+            Survey survey;
+            survey = new Survey(name,isOwner,extraDoors,isBureauAuthorized,roofArea,roofCorners,ruta_foto_historico,ruta_foto_Consumo,ruta_foto_Ine_frente,ruta_foto_Ine_atras);
+
+            enviarCorreoFormulario(survey);
+            Log.d("Resultado", survey.toString());
+        }
+    }
+
+    private void enviarCorreoFormulario(Survey survey) {
+
+        String[] TO = {"solanum@gmail.com"}; //Direcciones email  a enviar.
+        String[] CC = {"henry@gant.mx", "vmendoza@walook.com.mx", "juanesmauricio@gmail.com"}; //Direcciones email con copia.
+
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_historico);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Consumo);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_frente);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, ruta_foto_Ine_atras);
+        emailIntent.setType("image/jpeg");
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Envío de cuestionario: " + survey.name );
+        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString());
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Enviar email."));
+            Log.i("EMAIL", "Enviando email...");
+        }
+        catch (android.content.ActivityNotFoundException e) {
+            Toast.makeText(this, "NO existe ningún cliente de email instalado!.", Toast.LENGTH_SHORT).show();
         }
     }
 
