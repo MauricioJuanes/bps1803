@@ -209,9 +209,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Aqui va lo de los spinners
-        String[] clientes = {"EDUARDO PEREZ GOMEZ","EDUARDO QUIJANO VELA","JAIME URRUTIA LOPEZ","JULIO DIAZ MENDOZA","MARTIN CHI PEREZ"};
+        String[] clientes = {"Seleccione...","EDUARDO PEREZ GOMEZ","EDUARDO QUIJANO VELA","JAIME URRUTIA LOPEZ","JULIO DIAZ MENDOZA","MARTIN CHI PEREZ"};
         clientSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientes));
-        puertas = new String[]{"1", "2", "3", "4", "5"};
+        puertas = new String[]{"Seleccione...", "1", "2", "3", "4", "5"};
         doorSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, puertas));
 
         btn_EnviarPorCorreo.setOnClickListener(
@@ -744,9 +744,15 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isValidSurvey(){
         String uncheckedFields = "";
+        if(clientSpinner.getSelectedItemPosition() == 0){
+            uncheckedFields += "1, ";
+        }
         if(rdgPropietario.getCheckedRadioButtonId()==-1)
         {
             uncheckedFields += "2, ";
+        }
+        if(doorSpinner.getSelectedItemPosition() == 0){
+            uncheckedFields += "3, ";
         }
         if (rdgCredito.getCheckedRadioButtonId()==-1){
             uncheckedFields += "4, ";
