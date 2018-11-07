@@ -9,6 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="495dp"
+        android:layout_marginBottom="8dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -173,7 +174,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_component"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="visible">
 
 
                 <RelativeLayout
@@ -229,7 +231,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_component"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/contenedor_historico_cfe"
@@ -506,6 +509,24 @@
                         app:srcCompat="@mipmap/angle_right" />
                 </RelativeLayout>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_enviar_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/survey_button_save" />
+
+            <Button
+                android:id="@+id/btn_borrar_campos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/survey_button_erase" />
+
+            <Button
+                android:id="@+id/btn_salir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/survey_button_exit" />
 
 
         </LinearLayout>

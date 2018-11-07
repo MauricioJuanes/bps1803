@@ -2,6 +2,7 @@ package com.prototipo.prototipo.prototipo;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,12 +14,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -70,6 +73,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private boolean close = false;
     private  static final int REQUEST_CODE = 1;
     private Bitmap bitmap;
     private ImageView imageView;
@@ -77,15 +81,22 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton boton_frente_recibo_cfe;
     private ImageButton boton_mapa_area_local;
     private TextView texto_mapa_area_local_descripcion;
+
     private Spinner clientSpinner;
     private Spinner doorSpinner;
     private RadioGroup rdgPropietario;
     private RadioGroup rdgCredito;
+    private Button btn_EnviarPorCorreo;
+    private Button btn_LimpiarCampos;
+    private Button btn_Salir;
 //    private CheckBox checkbox_propietario;
     private Uri archivo;
     private Database database;
     private String ultimo_archivo_ubicacion;
     public ArrayList<Historico> historico_cfe;
+
+    private String[] puertas;
+    public static final int INDEX_ZERO = 0;
 
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAQWr3is_y_UXhi8GQccoBAihO2NGQiSJk";
@@ -126,8 +137,11 @@ public class MainActivity extends AppCompatActivity {
 
         clientSpinner = findViewById(R.id.spinner_1);
         doorSpinner = findViewById(R.id.spinner_3);
-        rdgPropietario = findViewById(R.id.rad_2);
+        rdgPropietario = findViewById(R.id.rad_2); //pendientes los rdg
         rdgCredito = findViewById(R.id.rad_4);
+        btn_EnviarPorCorreo = findViewById(R.id.btn_enviar_correo); // pendientes enviar y salir
+        btn_LimpiarCampos = findViewById(R.id.btn_borrar_campos);
+        btn_Salir = findViewById(R.id.btn_salir);
 
         cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
@@ -136,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
         //revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            cambiarEstadoBoton(boton_historico_cfe, Boolean.FALSE);
-            cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
+            cambiarEstadoBoton(boton_historico_cfe, Boolean.TRUE);
+            cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }
 
@@ -194,10 +208,38 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Aqui va lo de los spinners
-        String[] clientes = {"eduardo","juan","yasbedh","julio","andres"};
+        String[] clientes = {"EDUARDO PEREZ GOMEZ","EDUARDO QUIJANO VELA","JAIME URRUTIA LOPEZ","JULIO DIAZ MENDOZA","MARTIN CHI PEREZ"};
         clientSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientes));
-        String[] puertas = {"1","2","3","4","5"};
+        puertas = new String[]{"1", "2", "3", "4", "5"};
         doorSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, puertas));
+
+        btn_EnviarPorCorreo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
+                        sendSurvey();
+                    }
+                }
+        );
+
+        btn_LimpiarCampos.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
+                        askConfirmation("Reiniciar Formilario", "¿Desea reiniciar el formulario?");
+                    }
+                }
+        );
+
+        btn_Salir.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
+                        close = true;
+                        askConfirmation("Salir de la aplicacion", "¿Desea Salir de la aplicacion?");
+                    }
+                }
+        );
     }
 
     public void revisar_historico_cfe_guardado(Database database, ImageButton boton){
@@ -657,8 +699,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearSurvey(){
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
+
+        clientSpinner.setSelection(INDEX_ZERO);
+        doorSpinner.setSelection(INDEX_ZERO);
+
+        rdgPropietario.clearCheck();
+        rdgCredito.clearCheck();
+
+    }
+
+    public  void sendSurvey(){
+
+    }
+
+    public  void askConfirmation(String title, String message){
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (close){
+                            finish();
+                        }else{
+                            clearSurvey();
+                        }
+
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
