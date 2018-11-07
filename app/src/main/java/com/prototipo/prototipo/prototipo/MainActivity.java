@@ -863,7 +863,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void enviarCorreoFormulario(Survey survey) {
 
-        String[] TO = {"solanum@gmail.com"}; //Direcciones email  a enviar.
+        String[] TO = {"sky_lab_beto@hotmail.com"}; //Direcciones email  a enviar.
         String[] CC = {"henry@gant.mx", "vmendoza@walook.com.mx", "juanesmauricio@gmail.com"}; //Direcciones email con copia.
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
