@@ -726,6 +726,14 @@ public class MainActivity extends AppCompatActivity {
                 String json_historico_cfe = gson.toJson(historico_filtrado);
                 database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
                 database.saveElement(clave_historico, json_historico_cfe);
+
+                if( historico_filtrado != null && historico_filtrado.size() > 0){
+                    String historic =  "";
+
+                    for(int index = 0; index < historico_filtrado.size(); index ++){
+                        historic += historico_filtrado.get(index).getFecha() + " - " + historico_filtrado.get(index).getConsumo().toString() +"\n";
+                        database.saveHistoric(historic);
+                    }}
             }
             else{
                 Toast.makeText(getApplicationContext(), "No se pudo recuperar el histórico", Toast.LENGTH_SHORT).show();
