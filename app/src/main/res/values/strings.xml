@@ -27,14 +27,15 @@
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
 
     <string name="survey_field_1">1.- Cliente</string>
-    <string name="survey_field_2">2.- ¿Es propietario del predio?</string>
-    <string name="survey_field_3">3.- Puertas adicionales</string>
-    <string name="survey_field_4">4.- ¿Autoriza que se verifique buró de credito?</string>
-    <string name="survey_field_5">5.- Dimension de la azotea</string>
-    <string name="survey_field_6">6.- Historico CFE</string>
-    <string name="survey_field_7">7.- Consumo de luz</string>
-    <string name="survey_field_8">8.- INE Frente</string>
-    <string name="survey_field_9">9.- INE Atras</string>
+    <string name="survey_field_2">2.- ¿Desea recibir mas informacion?</string>
+    <string name="survey_field_3">3.- ¿Es propietario del predio?</string>
+    <string name="survey_field_4">4.- Puertas adicionales</string>
+    <string name="survey_field_5">5.- ¿Autoriza que se verifique buró de credito?</string>
+    <string name="survey_field_6">6.- Dimension de la azotea</string>
+    <string name="survey_field_7">7.- Historico CFE</string>
+    <string name="survey_field_8">8.- Consumo de luz</string>
+    <string name="survey_field_9">9.- INE Frente</string>
+    <string name="survey_field_10">10.- INE Atras</string>
     <string name="survey_answer_1">Si</string>
     <string name="survey_answer_2">No</string>
     <string name="survey_answer_3">No Sé</string>

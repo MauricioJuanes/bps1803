@@ -47,7 +47,7 @@
             <LinearLayout
                 android:id="@+id/survey_field_2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:background="@drawable/border_component"
                 android:orientation="vertical"
@@ -92,7 +92,6 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/survey_field_3"
                 android:layout_width="match_parent"
@@ -111,12 +110,36 @@
                     android:textColor="@color/colorTitle"
                     android:textSize="18sp" />
 
-                <Spinner
-                    android:id="@+id/spinner_3"
+                <RadioGroup
+                    android:id="@+id/rad_3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/rad_field_3_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_1" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_3_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_2" />
+
+                    <RadioButton
+                        android:id="@+id/rad_field_3_nose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/survey_answer_3" />
+
+                </RadioGroup>
 
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/survey_field_4"
@@ -136,8 +159,33 @@
                     android:textColor="@color/colorTitle"
                     android:textSize="18sp" />
 
+                <Spinner
+                    android:id="@+id/spinner_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/survey_field_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_component"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/lbl_survey_field_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/survey_field_5"
+                    android:textColor="@color/colorTitle"
+                    android:textSize="18sp" />
+
                 <RadioGroup
-                    android:id="@+id/rad_4"
+                    android:id="@+id/rad_5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -167,7 +215,7 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/survey_field_5"
+                android:id="@+id/survey_field_6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -189,7 +237,7 @@
                         android:id="@+id/lbl_mapa_area_local"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/survey_field_5"
+                        android:text="@string/survey_field_6"
                         android:textColor="@color/colorTitle"
                         android:textSize="18sp" />
 
@@ -224,7 +272,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/survey_field_6"
+                android:id="@+id/survey_field_7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -245,7 +293,7 @@
                         android:id="@+id/lbl_historico_cfe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/survey_field_6"
+                        android:text="@string/survey_field_7"
                         android:textColor="@color/colorTitle"
                         android:textSize="18sp" />
 
@@ -292,7 +340,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/survey_field_7"
+                android:id="@+id/survey_field_8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -312,7 +360,7 @@
                         android:id="@+id/lbl_survey_field_7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/survey_field_7"
+                        android:text="@string/survey_field_8"
                         android:textColor="@color/colorTitle"
                         android:textSize="18sp" />
 
@@ -348,7 +396,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/survey_field_8"
+                android:id="@+id/survey_field_9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -368,7 +416,7 @@
                         android:id="@+id/lbl_survey_field_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/survey_field_8"
+                        android:text="@string/survey_field_9"
                         android:textColor="@color/colorTitle"
                         android:textSize="18sp" />
 
@@ -377,7 +425,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/lbl_survey_field_8"
-                        android:text="@string/label_frente_recibo_cfe_descripcion"
+                        android:text="Captura los datos de tu INE"
                         android:textColor="@color/colorDescription" />
 
                 </RelativeLayout>
@@ -404,7 +452,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/survey_field_9"
+                android:id="@+id/survey_field_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -424,7 +472,7 @@
                         android:id="@+id/lbl_survey_field_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/survey_field_9"
+                        android:text="@string/survey_field_10"
                         android:textColor="@color/colorTitle"
                         android:textSize="18sp" />
 
@@ -433,7 +481,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/lbl_survey_field_9"
-                        android:text="@string/label_frente_recibo_cfe_descripcion"
+                        android:text="Captura los datos de tu INE"
                         android:textColor="@color/colorDescription" />
 
                 </RelativeLayout>

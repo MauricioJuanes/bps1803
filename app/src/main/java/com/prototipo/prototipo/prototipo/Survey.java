@@ -4,6 +4,7 @@ import android.net.Uri;
 
 public class Survey {
     public String name;
+    private String moreInfo;
     private String isOwner;
     private String extraDoors;
     private String isBureauAuthorized;
@@ -15,8 +16,9 @@ public class Survey {
     private Uri idBack;
 
 
-    public Survey(String name, String isOwner, String extraDoors, String isBureauAuthorized, String roofArea, String roofCorners, Uri history, Uri energyConsumption, Uri idFront, Uri idBack) {
+    public Survey(String name, String moreInfo, String isOwner, String extraDoors, String isBureauAuthorized, String roofArea, String roofCorners, Uri history, Uri energyConsumption, Uri idFront, Uri idBack) {
         this.name = name;
+        this.moreInfo = moreInfo;
         this.isOwner = isOwner;
         this.extraDoors = extraDoors;
         this.isBureauAuthorized = isBureauAuthorized;
@@ -35,6 +37,7 @@ public class Survey {
     @Override
     public String toString(){
         return "Nombre del cliente: " + name + "\n" +
+               "¿Desea obtener mas informacion?: " + moreInfo + "\n" +
                "¿Es Propietario?: " + isOwner + "\n" +
                "¿Puertas extra?: " + extraDoors + "\n" +
                "¿Autoriza el buró?: " + isBureauAuthorized + "\n" +

@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner clientSpinner;
     private Spinner doorSpinner;
+    private RadioGroup rdgMasInfo;
     private RadioGroup rdgPropietario;
     private RadioGroup rdgCredito;
     private Button btn_EnviarPorCorreo;
@@ -152,9 +153,10 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion = findViewById(R.id.lbl_mapa_area_local_descripcion);
 
         clientSpinner = findViewById(R.id.spinner_1);
-        doorSpinner = findViewById(R.id.spinner_3);
-        rdgPropietario = findViewById(R.id.rad_2); //pendientes los rdg
-        rdgCredito = findViewById(R.id.rad_4);
+        doorSpinner = findViewById(R.id.spinner_4);
+        rdgMasInfo = findViewById(R.id.rad_2);
+        rdgPropietario = findViewById(R.id.rad_3); //pendientes los rdg
+        rdgCredito = findViewById(R.id.rad_5);
         btn_EnviarPorCorreo = findViewById(R.id.btn_enviar_correo); // pendientes enviar y salir
         btn_LimpiarCampos = findViewById(R.id.btn_borrar_campos);
         btn_Salir = findViewById(R.id.btn_salir);
@@ -862,6 +864,7 @@ public class MainActivity extends AppCompatActivity {
         clientSpinner.setSelection(INDEX_ZERO);
         doorSpinner.setSelection(INDEX_ZERO);
 
+        rdgMasInfo.clearCheck();
         rdgPropietario.clearCheck();
         rdgCredito.clearCheck();
 
@@ -870,6 +873,8 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
 
         restoreImageButton(boton_historico_cfe);
+        LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
+        contenedor_historico.removeAllViews(); // aqui especificamente
         restoreImageButton(boton_consumo_de_luz);
         restoreImageButton(boton_ine_frente);
         restoreImageButton(boton_ine_atras);
@@ -879,6 +884,7 @@ public class MainActivity extends AppCompatActivity {
         if(isValidSurvey())
         {
             String name;
+            String moreInfo;
             String isOwner;
             String extraDoors;
             String isBureauAuthorized;
@@ -888,6 +894,8 @@ public class MainActivity extends AppCompatActivity {
             RadioButton selectedRadioButton;
 
             name = clientSpinner.getSelectedItem().toString();
+            selectedRadioButton = findViewById(rdgMasInfo.getCheckedRadioButtonId());
+            moreInfo = selectedRadioButton.getText().toString();
             selectedRadioButton = findViewById(rdgPropietario.getCheckedRadioButtonId());
             isOwner = selectedRadioButton.getText().toString();
             extraDoors = doorSpinner.getSelectedItemPosition()+"";
@@ -897,7 +905,7 @@ public class MainActivity extends AppCompatActivity {
             roofCorners = database.getRawAreaMarkers();
 
             Survey survey;
-            survey = new Survey(name,isOwner,extraDoors,isBureauAuthorized,roofArea,roofCorners,ruta_foto_historico,ruta_foto_Consumo,ruta_foto_Ine_frente,ruta_foto_Ine_atras);
+            survey = new Survey(name, moreInfo, isOwner,extraDoors,isBureauAuthorized,roofArea,roofCorners,ruta_foto_historico,ruta_foto_Consumo,ruta_foto_Ine_frente,ruta_foto_Ine_atras);
 
             enviarCorreoFormulario(survey);
             Log.d("Resultado", survey.toString());
@@ -962,34 +970,38 @@ public class MainActivity extends AppCompatActivity {
         if(clientSpinner.getSelectedItemPosition() == 0){
             uncheckedFields += "1, ";
         }
-        if(rdgPropietario.getCheckedRadioButtonId()==-1)
+        if(rdgMasInfo.getCheckedRadioButtonId()==-1)
         {
             uncheckedFields += "2, ";
         }
-/*        if(doorSpinner.getSelectedItemPosition() == 0){
+        if(rdgPropietario.getCheckedRadioButtonId()==-1)
+        {
             uncheckedFields += "3, ";
+        }
+/*        if(doorSpinner.getSelectedItemPosition() == 0){
+            uncheckedFields += "4, ";
         }*/
         if (rdgCredito.getCheckedRadioButtonId()==-1){
-            uncheckedFields += "4, ";
-        }
-        if (database.getCalculatedArea() == 0){
             uncheckedFields += "5, ";
         }
-
-        if (clave_historico.equals("") || clave_ultimo_archivo.equals("")){
+        if (database.getCalculatedArea() == 0){
             uncheckedFields += "6, ";
         }
 
-        if (ruta_foto_Consumo == null || ultima_foto_Consumo.equals("")){
+        if (clave_historico.equals("") || clave_ultimo_archivo.equals("")){
             uncheckedFields += "7, ";
         }
 
-        if (ruta_foto_Ine_frente == null || ultima_foto_ine_frente.equals("")){
+        if (ruta_foto_Consumo == null || ultima_foto_Consumo.equals("")){
             uncheckedFields += "8, ";
         }
 
-        if (ruta_foto_Ine_atras == null || ultima_foto_ine_atras.equals("")){
+        if (ruta_foto_Ine_frente == null || ultima_foto_ine_frente.equals("")){
             uncheckedFields += "9, ";
+        }
+
+        if (ruta_foto_Ine_atras == null || ultima_foto_ine_atras.equals("")){
+            uncheckedFields += "10, ";
         }
 
         if (uncheckedFields.equals("")){
