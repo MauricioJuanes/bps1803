@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                     texto_fecha.setText(lista_historico.get(index).getFecha());
                     texto_consumo.setText(lista_historico.get(index).getConsumo().toString());
 
-                    historic += lista_historico.get(index).getFecha() + " - " + lista_historico.get(index).getConsumo().toString();
+                    historic += lista_historico.get(index).getFecha() + " - " + lista_historico.get(index).getConsumo().toString() +"\n";
 
                     if(index%2 == 0)
                         contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
@@ -949,7 +949,7 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Envío de cuestionario: " + survey.name );
-        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\nHistorico: \n"+ database.getHistoric());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\nHistorico: \n"+ database.getHistoric()+"\n");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Enviar email."));
