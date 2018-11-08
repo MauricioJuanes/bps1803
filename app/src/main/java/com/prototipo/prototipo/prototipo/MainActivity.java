@@ -1016,7 +1016,7 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\nHistorico: \n"+ database.getHistoric()+"\n");
 
         try {
-            startActivity(Intent.createChooser(emailIntent, "Enviar email."));
+            startActivity(emailIntent);
             Log.i("EMAIL", "Enviando email...");
             //clearSurvey();
         }
