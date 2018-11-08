@@ -230,6 +230,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mMap.clear();
 
                 String currentPositionMarkerTitle = getApplicationContext().getString(R.string.current_user_position_title);
+
                 if (isSearchng){
                     mCurrentLocation.setLatitude(searchedLocation.getLatLng().latitude);
                     mCurrentLocation.setLongitude(searchedLocation.getLatLng().longitude);
@@ -247,10 +248,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         mCurrentLocation.setLatitude(lastPositionSaved.latitude);
                         mCurrentLocation.setLongitude(lastPositionSaved.longitude);
                         savedLocationBeforeClear = mCurrentLocation;
-                        List<LatLng> restoredPositions;
-                        restoredPositions = database.getAreaMarkers();
-                        for (int i=0; i<restoredPositions.size();i++){
-                            drawMarker(restoredPositions.get(i));
+                        if (!database.getRawAreaMarkers().equals(" ")){
+                            List<LatLng> restoredPositions;
+                            restoredPositions = database.getAreaMarkers();
+                            for (int i=0; i<restoredPositions.size();i++){
+                                drawMarker(restoredPositions.get(i));
+                            }
                         }
                     }else{
                         savedLocationBeforeClear = mCurrentLocation;
@@ -266,6 +269,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     isCleaningScreen = false;
                     mCurrentLocation = savedLocationBeforeClear;
                     mMap.clear();
+                    database.resetAreaMarkers();
+                    database.resetCalculatedArea();
                     markerPosition = new ArrayList<>();
                     markerIcons = new ArrayList<>();
                     perimeterLines = new ArrayList<>();

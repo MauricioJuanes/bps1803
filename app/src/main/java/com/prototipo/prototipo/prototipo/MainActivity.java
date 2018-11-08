@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -208,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
                     if( boton_historico_cfe.getTag() != null && boton_historico_cfe.getTag().toString().isEmpty() == false &&  boton_historico_cfe.getTag().toString().equalsIgnoreCase("View")){
                         Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
                         verImagen.putExtra("imagen",database.getElement(clave_ultimo_archivo));
+                        verImagen.putExtra("clave_archivo", clave_ultimo_archivo);
+                        verImagen.putExtra("clave_extra", clave_historico);
                         startActivity(verImagen);
                     }
                     else
@@ -226,7 +229,9 @@ public class MainActivity extends AppCompatActivity {
                     if( boton_consumo_de_luz.getTag() != null &&  boton_consumo_de_luz.getTag().toString().isEmpty() == false &&   boton_consumo_de_luz.getTag().toString().equalsIgnoreCase("View")){
                         Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
                         verImagen.putExtra("imagen",database.getElement("clave_consumo_luz"));
-                        startActivity(verImagen);
+                        verImagen.putExtra("clave_archivo", "");
+                        verImagen.putExtra("clave_extra", "");
+                        startActivityForResult(verImagen, 5);
                     }
                     else
                         tomarFotografiaConsumo();
@@ -245,7 +250,9 @@ public class MainActivity extends AppCompatActivity {
                     if( boton_ine_frente.getTag() != null &&  boton_ine_frente.getTag().toString().isEmpty() == false &&   boton_ine_frente.getTag().toString().equalsIgnoreCase("View")){
                         Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
                         verImagen.putExtra("imagen",database.getElement("clave_ine_frente"));
-                        startActivity(verImagen);
+                        verImagen.putExtra("clave_archivo", "");
+                        verImagen.putExtra("clave_extra", "");
+                        startActivityForResult(verImagen, 6);
                     }
                     else
                         tomarFotografiaINEFrente();
@@ -263,7 +270,9 @@ public class MainActivity extends AppCompatActivity {
                     if( boton_ine_atras.getTag() != null &&  boton_ine_atras.getTag().toString().isEmpty() == false &&   boton_ine_atras.getTag().toString().equalsIgnoreCase("View")){
                         Intent verImagen = new Intent(getApplicationContext(), ShowImageActivity.class);
                         verImagen.putExtra("imagen",database.getElement("clave_ine_atras"));
-                        startActivity(verImagen);
+                        verImagen.putExtra("clave_archivo", "");
+                        verImagen.putExtra("clave_extra", "");
+                        startActivityForResult(verImagen, 7);
                     }
                     else
                         tomarFotografiaINEAtras();
@@ -278,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
         // Aqui va lo de los spinners
         String[] clientes = {"Seleccione...","EDUARDO PEREZ GOMEZ","EDUARDO QUIJANO VELA","JAIME URRUTIA LOPEZ","JULIO DIAZ MENDOZA","MARTIN CHI PEREZ"};
         clientSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientes));
-        puertas = new String[]{"Seleccione...", "1", "2", "3", "4", "5"};
+        puertas = new String[]{"0", "1", "2", "3", "4", "5"};
         doorSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, puertas));
 
         btn_EnviarPorCorreo.setOnClickListener(
@@ -312,13 +321,13 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    public void revisar_historico_cfe_guardado(Database database, ImageButton boton){
+    public void revisar_historico_cfe_guardado(Database database, ImageButton boton){ // Aqui Borra del historico
 
         String historico = database.getElement(clave_historico);
         String imagen = database.getElement(clave_ultimo_archivo);
         Gson gson = new Gson();
         LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
-        contenedor_historico.removeAllViews();
+        contenedor_historico.removeAllViews(); // aqui especificamente
         Type historico_lista_tipo = new TypeToken<ArrayList<Historico>>(){}.getType();
         if(historico != null && imagen != null && historico.isEmpty() == false && imagen.isEmpty() == false){
             File imagen_archivo = new File(imagen);
@@ -352,6 +361,7 @@ public class MainActivity extends AppCompatActivity {
                 boton.setBackgroundResource(R.color.colorBackground);
                 boton.setImageResource(R.mipmap.eye_icon);
                 boton.setTag("View");
+
             }
 
 /*            if(checkbox_propietario.isChecked()) {
@@ -475,6 +485,30 @@ public class MainActivity extends AppCompatActivity {
                 boton_ine_atras.setImageResource(R.mipmap.eye_icon);
                 boton_ine_atras.setTag("View");
                 database.saveElement("clave_ine_atras", ultima_foto_ine_atras);
+                break;
+            case 5:
+                if (resultCode == RESULT_OK) {
+                    //deleteImage(ruta_foto_Consumo);
+                    ruta_foto_Consumo = null;
+                    ultima_foto_Consumo = null;
+                    restoreImageButton(boton_consumo_de_luz);
+                }
+                break;
+            case 6:
+                if (resultCode == RESULT_OK) {
+                    //deleteImage(ruta_foto_Ine_frente);
+                    ruta_foto_Ine_frente = null;
+                    ultima_foto_ine_frente = null;
+                    restoreImageButton(boton_ine_frente);
+                }
+                break;
+            case 7:
+                if (resultCode == RESULT_OK) {
+                    //deleteImage(ruta_foto_Ine_atras);
+                    ruta_foto_Ine_atras = null;
+                    ultima_foto_ine_atras = null;
+                    restoreImageButton(boton_ine_atras);
+                }
                 break;
             default:
         }
@@ -831,6 +865,14 @@ public class MainActivity extends AppCompatActivity {
         rdgPropietario.clearCheck();
         rdgCredito.clearCheck();
 
+        database.resetAreaMarkers();
+        database.resetCalculatedArea();
+        texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
+
+        restoreImageButton(boton_historico_cfe);
+        restoreImageButton(boton_consumo_de_luz);
+        restoreImageButton(boton_ine_frente);
+        restoreImageButton(boton_ine_atras);
     }
 
     public  void sendSurvey(){
@@ -924,14 +966,30 @@ public class MainActivity extends AppCompatActivity {
         {
             uncheckedFields += "2, ";
         }
-        if(doorSpinner.getSelectedItemPosition() == 0){
+/*        if(doorSpinner.getSelectedItemPosition() == 0){
             uncheckedFields += "3, ";
-        }
+        }*/
         if (rdgCredito.getCheckedRadioButtonId()==-1){
             uncheckedFields += "4, ";
         }
         if (database.getCalculatedArea() == 0){
             uncheckedFields += "5, ";
+        }
+
+        if (clave_historico.equals("") || clave_ultimo_archivo.equals("")){
+            uncheckedFields += "6, ";
+        }
+
+        if (ruta_foto_Consumo == null || ultima_foto_Consumo.equals("")){
+            uncheckedFields += "7, ";
+        }
+
+        if (ruta_foto_Ine_frente == null || ultima_foto_ine_frente.equals("")){
+            uncheckedFields += "8, ";
+        }
+
+        if (ruta_foto_Ine_atras == null || ultima_foto_ine_atras.equals("")){
+            uncheckedFields += "9, ";
         }
 
         if (uncheckedFields.equals("")){
@@ -941,5 +999,40 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
+    }
+
+    private void deleteImage(Uri imageUri){
+
+        File fdelete = new File(getFilePath(imageUri));
+
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                System.out.println("file Deleted :" );
+            } else {
+                System.out.println("file not Deleted :");
+            }
+        }
+
+    }
+
+    private String getFilePath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(projection[0]);
+            String picturePath = cursor.getString(columnIndex); // returns null
+            cursor.close();
+            return picturePath;
+        }
+        return null;
+    }
+
+    private void restoreImageButton(ImageButton boton){
+        boton.setBackgroundResource(R.drawable.round_button_active);
+        boton.setImageResource(R.mipmap.angle_right);
+        boton.setTag("");
     }
 }

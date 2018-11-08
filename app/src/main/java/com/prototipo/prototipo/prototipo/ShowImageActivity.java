@@ -24,8 +24,8 @@ public class ShowImageActivity extends AppCompatActivity {
     private ImageView imagen;
     private ImageButton boton_eliminar;
     private Database database;
-    public String clave_historico = "clave_historico";
-    public String clave_ultimo_archivo = "clave_ultimo_archivo";
+    /*public String clave_historico = "clave_historico";
+    public String clave_ultimo_archivo = "clave_ultimo_archivo";*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,9 +85,10 @@ public class ShowImageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                database.DeleteElement(clave_historico);
-                                database.DeleteElement(clave_ultimo_archivo);
+                                database.DeleteElement(getIntent().getStringExtra("clave_archivo"));
+                                database.DeleteElement(getIntent().getStringExtra("clave_archivo"));
                                 Toast.makeText(ShowImageActivity.this,"Histórico eliminado", Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK);
                                 finish();
                             }
                         });

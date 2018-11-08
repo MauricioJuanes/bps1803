@@ -40,6 +40,12 @@ public class Database {
         editor.apply();
     }
 
+    public void resetCalculatedArea(){
+        Editor editor = db.edit();
+        editor.putString("calculatedArea", String.valueOf(0.0) );
+        editor.apply();
+    }
+
     public double  getCalculatedArea(){
         double calculatedArea = 0;
         calculatedArea = Double.parseDouble(db.getString("calculatedArea", "0.0"));
@@ -66,9 +72,15 @@ public class Database {
         editor.apply();
     }
 
+    public void resetAreaMarkers(){
+        Editor editor = db.edit();
+        editor.putString("positionMarkersOnMap", " ");
+        editor.apply();
+    }
+
     public List<LatLng> getAreaMarkers(){
         List<LatLng>  positionsArray = new ArrayList<>();
-        String positions = db.getString("positionMarkersOnMap", "");
+        String positions = db.getString("positionMarkersOnMap", " ");
         try{
             Type type = new TypeToken<List<LatLng>>(){}.getType();
             positionsArray = new Gson().fromJson(positions, type);
