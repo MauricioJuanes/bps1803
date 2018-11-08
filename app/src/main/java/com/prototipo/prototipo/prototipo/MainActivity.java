@@ -1013,7 +1013,7 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Envío de cuestionario: " + survey.name );
-        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\nHistorico: \n"+ database.getHistoric()+"\n");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\n7.- Historico: \n"+ database.getHistoric()+"\n");
 
         try {
             startActivity(emailIntent);

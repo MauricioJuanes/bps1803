@@ -36,12 +36,12 @@ public class Survey {
 
     @Override
     public String toString(){
-        return "Nombre del cliente: " + name + "\n" +
-               "¿Desea obtener mas informacion?: " + moreInfo + "\n" +
-               "¿Es Propietario?: " + isOwner + "\n" +
-               "¿Puertas extra?: " + extraDoors + "\n" +
-               "¿Autoriza el buró?: " + isBureauAuthorized + "\n" +
-               "Area del Tejado: " + roofArea + " m2" + "\n" +
+        return "1.- Nombre del cliente: " + name + "\n" +
+               "2.- ¿Desea recibir mas informacion?: " + moreInfo + "\n" +
+               "3.- ¿Es Propietario?: " + isOwner + "\n" +
+               "4.- Puertas adicionales: " + extraDoors + "\n" +
+               "5.- ¿Autoriza verificación  del buró?: " + isBureauAuthorized + "\n" +
+               "6.- Dimension de la azotea: " + roofArea + " m2" + "\n" +
                "Esquinas del tejado: " + roofCorners;
     }
 
