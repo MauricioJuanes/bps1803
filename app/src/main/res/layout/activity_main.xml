@@ -65,7 +65,8 @@
                 <RadioGroup
                     android:id="@+id/rad_2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/rad_field_2_yes"
@@ -113,7 +114,8 @@
                 <RadioGroup
                     android:id="@+id/rad_3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/rad_field_3_yes"
@@ -187,7 +189,8 @@
                 <RadioGroup
                     android:id="@+id/rad_5"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/rad_field_4_yes"
