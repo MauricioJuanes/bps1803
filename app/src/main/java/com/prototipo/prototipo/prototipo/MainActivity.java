@@ -937,6 +937,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, "Enviar email."));
             Log.i("EMAIL", "Enviando email...");
+            clearSurvey();
         }
         catch (android.content.ActivityNotFoundException e) {
             Toast.makeText(this, "No  existe ningún cliente de email instalado!.", Toast.LENGTH_SHORT).show();
