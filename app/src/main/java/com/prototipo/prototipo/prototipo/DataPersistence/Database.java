@@ -30,10 +30,21 @@ public class Database {
         editor.apply();
     }
 
+
     public String getElement(String name){
         return db.getString(name, "");
     }
 
+    public void saveElementInt(String name, int value){
+        Editor editor = db.edit();
+        editor.putInt(name,value);
+        editor.apply();
+    }
+
+    public int getElementInt(String name){
+        int value=db.getInt(name,-1);
+        return value;
+    }
     public void saveCalculatedArea(double localArea){
         Editor editor = db.edit();
         editor.putString("calculatedArea", String.valueOf(localArea) );

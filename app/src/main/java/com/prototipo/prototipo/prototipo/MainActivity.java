@@ -121,6 +121,13 @@ public class MainActivity extends AppCompatActivity {
     public String clave_ultimo_archivo = "clave_ultimo_archivo";
     public Uri ultima_foto_ruta;
 
+    public String id_namePos = "namePos";
+    public String id_moreInfoId = "moreInfoId";
+    public String id_isOwnerId = "isOwnerId";
+    public String id_extraDoorsPos = "extraDoorsPos";
+    public String id_isBureauAuthorizedId = "isBureauAuthorizedId";
+
+
     private Gson gson;
 
     private Uri ruta_foto_Consumo;
@@ -872,6 +879,34 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
         revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
+        int namePos = database.getElementInt(id_namePos);
+        int moreInfoId = database.getElementInt(id_moreInfoId);
+        int isOwnerId = database.getElementInt(id_isOwnerId);
+        int extraDoorsPos = database.getElementInt(id_extraDoorsPos);
+        int isBureauAuthorizedId = database.getElementInt(id_isBureauAuthorizedId);
+
+
+
+
+        if (namePos != -1) {
+            clientSpinner.setSelection(namePos);
+        }
+        if (moreInfoId != -1) {
+            rdgMasInfo.check(moreInfoId);
+        }
+        if (isOwnerId != -1) {
+            rdgPropietario.check(isOwnerId);
+        }
+        if (extraDoorsPos != -1) {
+            doorSpinner.setSelection(extraDoorsPos);
+        }
+        if (isBureauAuthorizedId != -1) {
+            rdgCredito.check(isBureauAuthorizedId);
+        }
+
+
+
+
 /*        if(checkbox_propietario.isChecked()) {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
             cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
@@ -879,6 +914,26 @@ public class MainActivity extends AppCompatActivity {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.FALSE);
             cambiarEstadoBoton(boton_mapa_area_local, Boolean.FALSE);
         }*/
+
+    }
+
+
+    @Override
+    public void onStop(){
+
+        int namePos=clientSpinner.getSelectedItemPosition();
+        int moreInfoId=rdgMasInfo.getCheckedRadioButtonId();
+        int isOwnerId=rdgPropietario.getCheckedRadioButtonId();
+        int extraDoorsPos=doorSpinner.getSelectedItemPosition();
+        int isBureauAuthorizedId=rdgCredito.getCheckedRadioButtonId();
+
+        database.saveElementInt(id_namePos, namePos);
+        database.saveElementInt(id_moreInfoId, moreInfoId);
+        database.saveElementInt(id_isOwnerId, isOwnerId);
+        database.saveElementInt(id_extraDoorsPos, extraDoorsPos);
+        database.saveElementInt(id_isBureauAuthorizedId, isBureauAuthorizedId);
+
+        super.onStop();
 
     }
 
