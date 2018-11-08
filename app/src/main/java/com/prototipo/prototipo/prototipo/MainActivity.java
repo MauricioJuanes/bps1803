@@ -1051,46 +1051,46 @@ public class MainActivity extends AppCompatActivity {
     public boolean isValidSurvey(){
         String uncheckedFields = "";
         if(clientSpinner.getSelectedItemPosition() == 0){
-            uncheckedFields += "1, ";
+            uncheckedFields += "Cliente, ";
         }
         if(rdgMasInfo.getCheckedRadioButtonId()==-1)
         {
-            uncheckedFields += "2, ";
+            uncheckedFields += "¿Recibir mas informacion?, ";
         }
         if(rdgPropietario.getCheckedRadioButtonId()==-1)
         {
-            uncheckedFields += "3, ";
+            uncheckedFields += "¿Es propietario del predio?, ";
         }
 /*        if(doorSpinner.getSelectedItemPosition() == 0){
-            uncheckedFields += "4, ";
+            uncheckedFields += "puertas adicionales, ";
         }*/
         if (rdgCredito.getCheckedRadioButtonId()==-1){
-            uncheckedFields += "5, ";
+            uncheckedFields += "¿Autoriza verificación de buró de crédito?, ";
         }
         if (database.getCalculatedArea() == 0){
-            uncheckedFields += "6, ";
+            uncheckedFields += "Dimension de la azotea, ";
         }
 
         if (clave_historico.equals("") || clave_ultimo_archivo.equals("")){
-            uncheckedFields += "7, ";
+            uncheckedFields += "Historico de cfe, ";
         }
 
         if (ruta_foto_Consumo == null || ultima_foto_Consumo.equals("")){
-            uncheckedFields += "8, ";
+            uncheckedFields += "Consumo de luz, ";
         }
 
         if (ruta_foto_Ine_frente == null || ultima_foto_ine_frente.equals("")){
-            uncheckedFields += "9, ";
+            uncheckedFields += "INE frente, ";
         }
 
         if (ruta_foto_Ine_atras == null || ultima_foto_ine_atras.equals("")){
-            uncheckedFields += "10, ";
+            uncheckedFields += "INE atras, ";
         }
 
         if (uncheckedFields.equals("")){
             return true;
         }else{
-            Toast.makeText(getApplicationContext(), "No respondio el(los) campo(s) " + uncheckedFields + "revise la encuesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "No respondio los campos: " + uncheckedFields + "revise la encuesta", Toast.LENGTH_SHORT).show();
             return false;
         }
 
