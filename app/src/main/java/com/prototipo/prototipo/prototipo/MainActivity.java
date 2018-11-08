@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                         verImagen.putExtra("imagen",database.getElement(clave_ultimo_archivo));
                         verImagen.putExtra("clave_archivo", clave_ultimo_archivo);
                         verImagen.putExtra("clave_extra", clave_historico);
-                        startActivity(verImagen);
+                        startActivityForResult(verImagen,8);
                     }
                     else
                         tomarFotografiaHistorico();
@@ -341,6 +341,9 @@ public class MainActivity extends AppCompatActivity {
                 contenedor_historico.setVisibility(View.VISIBLE);
                 TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
                 texto_historico_cfe_descripcion.setText("");
+
+                String historic =  "";
+
                 for(int index = 0; index < lista_historico.size(); index ++){
 
 
@@ -351,14 +354,19 @@ public class MainActivity extends AppCompatActivity {
                     TextView texto_fecha = elemento.findViewById(R.id.txt_fecha);
                     TextView texto_consumo = elemento.findViewById(R.id.txt_consumo);
 
+
                     texto_fecha.setText(lista_historico.get(index).getFecha());
                     texto_consumo.setText(lista_historico.get(index).getConsumo().toString());
+
+                    historic += lista_historico.get(index).getFecha() + " - " + lista_historico.get(index).getConsumo().toString();
 
                     if(index%2 == 0)
                         contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
                     contenedor_historico.addView(elemento);
 
                 }
+                database.saveHistoric(historic);
+
                 boton.setEnabled(Boolean.TRUE);
                 boton.setBackgroundResource(R.color.colorBackground);
                 boton.setImageResource(R.mipmap.eye_icon);
@@ -510,6 +518,12 @@ public class MainActivity extends AppCompatActivity {
                     ruta_foto_Ine_atras = null;
                     ultima_foto_ine_atras = null;
                     restoreImageButton(boton_ine_atras);
+                }
+                break;
+            case 8:
+                if (resultCode == RESULT_OK) {
+                    //deleteImage(ruta_foto_Ine_atras);
+                    restoreImageButton(boton_historico_cfe);
                 }
                 break;
             default:
@@ -847,7 +861,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         System.out.println("calling resume");
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
-        //revisar_historico_cfe_guardado(database, boton_historico_cfe);
+        revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
 /*        if(checkbox_propietario.isChecked()) {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
@@ -875,6 +889,8 @@ public class MainActivity extends AppCompatActivity {
         restoreImageButton(boton_historico_cfe);
         LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
         contenedor_historico.removeAllViews(); // aqui especificamente
+        database.DeleteElement(clave_historico);
+        database.DeleteElement(clave_ultimo_archivo);
 
         restoreImageButton(boton_consumo_de_luz);
         restoreImageButton(boton_ine_frente);
@@ -933,12 +949,12 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Envío de cuestionario: " + survey.name );
-        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, survey.toString() + "\nHistorico: \n"+ database.getHistoric());
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Enviar email."));
             Log.i("EMAIL", "Enviando email...");
-            clearSurvey();
+            //clearSurvey();
         }
         catch (android.content.ActivityNotFoundException e) {
             Toast.makeText(this, "No  existe ningún cliente de email instalado!.", Toast.LENGTH_SHORT).show();
@@ -955,6 +971,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (close){
+                            clearSurvey();
                             finish();
                         }else{
                             clearSurvey();

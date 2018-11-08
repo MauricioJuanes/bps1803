@@ -101,5 +101,15 @@ public class Database {
         editor.apply();
     }
 
+    public void saveHistoric(String historic){
+        Editor editor = db.edit();
+        editor.putString("historico",historic);
+        editor.apply();
+    }
+
+    public String getHistoric(){
+        return db.getString("historico","");
+    }
+
 
 }

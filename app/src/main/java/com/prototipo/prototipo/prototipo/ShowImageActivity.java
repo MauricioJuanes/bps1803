@@ -80,14 +80,14 @@ public class ShowImageActivity extends AppCompatActivity {
 
     public void openDilog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("¿Esta seguro de eliminar la información del histórico CFE?");
+        alertDialogBuilder.setMessage("¿Esta seguro de eliminar la imagen guardada?");
                 alertDialogBuilder.setPositiveButton("Si",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
+                                database.DeleteElement(getIntent().getStringExtra("clave_extra"));
                                 database.DeleteElement(getIntent().getStringExtra("clave_archivo"));
-                                database.DeleteElement(getIntent().getStringExtra("clave_archivo"));
-                                Toast.makeText(ShowImageActivity.this,"Histórico eliminado", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShowImageActivity.this,"Imagen eliminada", Toast.LENGTH_SHORT).show();
                                 setResult(RESULT_OK);
                                 finish();
                             }
