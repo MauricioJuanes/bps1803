@@ -847,7 +847,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         System.out.println("calling resume");
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
-        revisar_historico_cfe_guardado(database, boton_historico_cfe);
+        //revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
 /*        if(checkbox_propietario.isChecked()) {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
@@ -875,6 +875,7 @@ public class MainActivity extends AppCompatActivity {
         restoreImageButton(boton_historico_cfe);
         LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
         contenedor_historico.removeAllViews(); // aqui especificamente
+
         restoreImageButton(boton_consumo_de_luz);
         restoreImageButton(boton_ine_frente);
         restoreImageButton(boton_ine_atras);
