@@ -37,6 +37,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+//import java.net.URI;
 import java.text.DecimalFormat;
 
 import java.io.IOException;
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] puertas;
     public static final int INDEX_ZERO = 0;
-
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAQWr3is_y_UXhi8GQccoBAihO2NGQiSJk";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v){
-                        askConfirmation("Reiniciar Formilario", "¿Desea reiniciar el formulario?");
+                        askConfirmation("Reiniciar Formulario", "¿Desea reiniciar el formulario?");
                     }
                 }
         );
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v){
                         close = true;
-                        askConfirmation("Salir de la aplicacion", "¿Desea Salir de la aplicacion?");
+                        askConfirmation("Salir de la aplicación", "¿Desea Salir de la aplicacion?");
                     }
                 }
         );
@@ -443,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
         ultima_foto_Historico = imagenHistorico.getAbsolutePath();
         ruta_foto_historico = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenHistorico);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_historico);
+        database.saveElement("ruta_foto_historico", ruta_foto_historico.toString());
         ultima_foto_ruta =  ruta_foto_historico;
         startActivityForResult(intent, GUARDAR_FOTO_HISTORICO);
     }
@@ -453,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
         ultima_foto_Consumo = imagenConsumo.getAbsolutePath();
         ruta_foto_Consumo = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenConsumo);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Consumo);
+        database.saveElement("ruta_foto_consumo", ruta_foto_Consumo.toString());
         ultima_foto_ruta = ruta_foto_Consumo;
         startActivityForResult(intent,GUARDAR_FOTO_CONSUMO);
     }
@@ -463,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
         ultima_foto_ine_frente = imagenINEFrente.getAbsolutePath();
         ruta_foto_Ine_frente = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenINEFrente);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Ine_frente);
+        database.saveElement("ruta_foto_Ine_frente", ruta_foto_Ine_frente.toString());
         ultima_foto_ruta = ruta_foto_Ine_frente;
         startActivityForResult(intent,GUARDAR_INE_FRENTE);
     }
@@ -473,6 +476,7 @@ public class MainActivity extends AppCompatActivity {
         ultima_foto_ine_atras = imagenINEAtras.getAbsolutePath();
         ruta_foto_Ine_atras = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",imagenINEAtras);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, ruta_foto_Ine_atras);
+        database.saveElement("ruta_foto_Ine_atras", ruta_foto_Ine_atras.toString());
         ultima_foto_ruta = ruta_foto_Ine_atras;
         startActivityForResult(intent,GUARDAR_INE_ATRAS);
     }
@@ -481,6 +485,7 @@ public class MainActivity extends AppCompatActivity {
 
         ultima_foto_Historico = database.getElement(clave_ultimo_archivo);
         if(!ultima_foto_Historico.isEmpty()) {
+            ruta_foto_historico = Uri.parse(database.getElement("ruta_foto_historico"));
             boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
             boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
             boton_historico_cfe.setTag("View");
@@ -488,6 +493,7 @@ public class MainActivity extends AppCompatActivity {
 
         ultima_foto_Consumo = database.getElement("clave_consumo_luz");
         if(!ultima_foto_Consumo.isEmpty()) {
+            ruta_foto_Consumo = Uri.parse(database.getElement("ruta_foto_Consumo"));
             boton_consumo_de_luz.setBackgroundResource(R.color.colorBackground);
             boton_consumo_de_luz.setImageResource(R.mipmap.eye_icon);
             boton_consumo_de_luz.setTag("View");
@@ -495,6 +501,7 @@ public class MainActivity extends AppCompatActivity {
 
         ultima_foto_ine_frente = database.getElement("clave_consumo_luz");
         if(!ultima_foto_ine_frente.isEmpty()) {
+            ruta_foto_Ine_frente = Uri.parse(database.getElement("ruta_foto_Ine_frente"));
             boton_ine_frente.setBackgroundResource(R.color.colorBackground);
             boton_ine_frente.setImageResource(R.mipmap.eye_icon);
             boton_ine_frente.setTag("View");
@@ -502,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
 
         ultima_foto_ine_atras = database.getElement("clave_ine_atras");
         if(!ultima_foto_ine_atras.isEmpty()) {
+            ruta_foto_Ine_atras = Uri.parse(database.getElement("ruta_foto_Ine_atras"));
             boton_ine_atras.setBackgroundResource(R.color.colorBackground);
             boton_ine_atras.setImageResource(R.mipmap.eye_icon);
             boton_ine_atras.setTag("View");
@@ -545,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
                     //deleteImage(ruta_foto_Consumo);
                     ruta_foto_Consumo = null;
                     ultima_foto_Consumo = null;
+                    database.DeleteElement("clave_consumo_luz");
                     restoreImageButton(boton_consumo_de_luz);
                 }
                 break;
@@ -553,6 +562,7 @@ public class MainActivity extends AppCompatActivity {
                     //deleteImage(ruta_foto_Ine_frente);
                     ruta_foto_Ine_frente = null;
                     ultima_foto_ine_frente = null;
+                    database.DeleteElement("clave_ine_frente");
                     restoreImageButton(boton_ine_frente);
                 }
                 break;
@@ -561,12 +571,14 @@ public class MainActivity extends AppCompatActivity {
                     //deleteImage(ruta_foto_Ine_atras);
                     ruta_foto_Ine_atras = null;
                     ultima_foto_ine_atras = null;
+                    database.DeleteElement("clave_ine_atras");
                     restoreImageButton(boton_ine_atras);
                 }
                 break;
             case 8:
                 if (resultCode == RESULT_OK) {
                     //deleteImage(ruta_foto_Ine_atras);
+                    database.DeleteElement(clave_ultimo_archivo);
                     restoreImageButton(boton_historico_cfe);
                 }
                 break;
@@ -711,7 +723,7 @@ public class MainActivity extends AppCompatActivity {
 
             ArrayList<Historico> historico_filtrado = new ArrayList<>();
 
-            for(int index = 0; index < historico_cfe.size(); index ++){
+            for(int index = 0; index < historico_cfe.size(); index ++) {
                 if(historico_cfe.get(index).getConsumo() > 0){
                     historico_filtrado.add(historico_cfe.get(index));
                     contador_interno += 1;
@@ -729,20 +741,18 @@ public class MainActivity extends AppCompatActivity {
                     texto_consumo.setText(historico_cfe.get(index).getConsumo().toString());
                     promedio += historico_cfe.get(index).getConsumo();
 
-                    if(contador_interno%2 == 0)
+                    if(contador_interno % 2 == 0)
                         contenedor_item_historico.setBackground(getDrawable(R.color.colorBackgroundText));
                     contenedor_historico.addView(elemento);
 
                 }
             }
 
-
-            if(historico_filtrado.size() > 0){
+            if(historico_filtrado.size() > 0) {
                 LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
                 contenedor_historico.setVisibility(View.VISIBLE);
                 TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
                 texto_historico_cfe_descripcion.setText("");
-
 
                 LayoutInflater vista = LayoutInflater.from(getApplicationContext());
                 View elemento = vista.inflate(R.layout.item_historico, null, false);
@@ -763,7 +773,6 @@ public class MainActivity extends AppCompatActivity {
 
                 String json_historico_cfe = gson.toJson(historico_filtrado);
                 database.saveElement(clave_historico, json_historico_cfe);
-
 
                 if (historico_filtrado != null && historico_filtrado.size() > 0) {
                     String historic = "";
@@ -914,9 +923,6 @@ public class MainActivity extends AppCompatActivity {
         int extraDoorsPos = database.getElementInt(id_extraDoorsPos);
         int isBureauAuthorizedId = database.getElementInt(id_isBureauAuthorizedId);
 
-
-
-
         if (namePos != -1) {
             clientSpinner.setSelection(namePos);
         }
@@ -933,8 +939,7 @@ public class MainActivity extends AppCompatActivity {
             rdgCredito.check(isBureauAuthorizedId);
         }
 
-
-
+        //setDefaultPictureValues();
 
 /*        if(checkbox_propietario.isChecked()) {
             cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
@@ -945,7 +950,6 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
     }
-
 
     @Override
     public void onStop(){
@@ -1015,6 +1019,7 @@ public class MainActivity extends AppCompatActivity {
             roofCorners = database.getRawAreaMarkers();
 
             Survey survey;
+            //survey = new Survey(name, moreInfo, isOwner,extraDoors,isBureauAuthorized,roofArea,roofCorners,ruta_foto_historico,ruta_foto_Consumo,ruta_foto_Ine_frente,ruta_foto_Ine_atras);
             survey = new Survey(name, moreInfo, isOwner,extraDoors,isBureauAuthorized,roofArea,roofCorners,ruta_foto_historico,ruta_foto_Consumo,ruta_foto_Ine_frente,ruta_foto_Ine_atras);
 
             enviarCorreoFormulario(survey);
@@ -1046,6 +1051,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             startActivity(emailIntent);
+            //startActivity(Intent.createChooser(emailIntent, "Enviar email"));
             Log.i("EMAIL", "Enviando email...");
             //clearSurvey();
         }
@@ -1100,19 +1106,19 @@ public class MainActivity extends AppCompatActivity {
             uncheckedFields += "Dimension de la azotea, ";
         }
 
-        if (clave_historico.equals("") || clave_ultimo_archivo.equals("")){
+        if (clave_ultimo_archivo.equals("")){
             uncheckedFields += "Historico de cfe, ";
         }
 
-        if (ruta_foto_Consumo == null || ultima_foto_Consumo.equals("")){
+        if (ultima_foto_Consumo.equals("")){
             uncheckedFields += "Consumo de luz, ";
         }
 
-        if (ruta_foto_Ine_frente == null || ultima_foto_ine_frente.equals("")){
+        if (ultima_foto_ine_frente.equals("")){
             uncheckedFields += "INE frente, ";
         }
 
-        if (ruta_foto_Ine_atras == null || ultima_foto_ine_atras.equals("")){
+        if (ultima_foto_ine_atras.equals("")){
             uncheckedFields += "INE atras, ";
         }
 
