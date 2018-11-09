@@ -983,14 +983,27 @@ public class MainActivity extends AppCompatActivity {
         texto_mapa_area_local_descripcion.setText(new DecimalFormat("##.##").format(database.getCalculatedArea())+" m2");
 
         restoreImageButton(boton_historico_cfe);
-        LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
-        contenedor_historico.removeAllViews(); // aqui especificamente
-        database.DeleteElement(clave_historico);
-        database.DeleteElement(clave_ultimo_archivo);
-
         restoreImageButton(boton_consumo_de_luz);
         restoreImageButton(boton_ine_frente);
         restoreImageButton(boton_ine_atras);
+
+        LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
+        contenedor_historico.removeAllViews(); // aqui especificamente
+
+        database.DeleteElement(clave_historico);
+        database.DeleteElement(clave_ultimo_archivo);
+        database.DeleteElement("clave_consumo_luz");
+        database.DeleteElement("clave_consumo_luz");
+        database.DeleteElement("clave_ine_atras");
+
+
+        database.DeleteElement(id_namePos);
+        database.DeleteElement(id_moreInfoId);
+        database.DeleteElement(id_isOwnerId);
+        database.DeleteElement(id_extraDoorsPos);
+        database.DeleteElement(id_isBureauAuthorizedId);
+
+
     }
 
     public  void sendSurvey(){
