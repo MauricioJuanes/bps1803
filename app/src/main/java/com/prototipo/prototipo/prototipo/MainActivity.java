@@ -493,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
 
         ultima_foto_Consumo = database.getElement("clave_consumo_luz");
         if(!ultima_foto_Consumo.isEmpty()) {
-            ruta_foto_Consumo = Uri.parse(database.getElement("ruta_foto_Consumo"));
+            ruta_foto_Consumo = Uri.parse(database.getElement("ruta_foto_consumo"));
             boton_consumo_de_luz.setBackgroundResource(R.color.colorBackground);
             boton_consumo_de_luz.setImageResource(R.mipmap.eye_icon);
             boton_consumo_de_luz.setTag("View");
