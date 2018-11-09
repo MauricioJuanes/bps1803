@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity {
             boton_consumo_de_luz.setTag("View");
         }
 
-        ultima_foto_ine_frente = database.getElement("clave_consumo_luz");
+        ultima_foto_ine_frente = database.getElement("clave_ine_frente");
         if(!ultima_foto_ine_frente.isEmpty()) {
             ruta_foto_Ine_frente = Uri.parse(database.getElement("ruta_foto_Ine_frente"));
             boton_ine_frente.setBackgroundResource(R.color.colorBackground);
@@ -993,7 +993,7 @@ public class MainActivity extends AppCompatActivity {
         database.DeleteElement(clave_historico);
         database.DeleteElement(clave_ultimo_archivo);
         database.DeleteElement("clave_consumo_luz");
-        database.DeleteElement("clave_consumo_luz");
+        database.DeleteElement("clave_ine_frente");
         database.DeleteElement("clave_ine_atras");
 
 
