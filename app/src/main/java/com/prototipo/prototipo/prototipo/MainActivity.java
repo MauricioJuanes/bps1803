@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
         cambiarEstadoBoton(boton_frente_recibo_cfe, Boolean.TRUE);
         cambiarEstadoBoton(boton_mapa_area_local, Boolean.TRUE);
 
+        setDefaultPictureValues();
         //revisar_historico_cfe_guardado(database, boton_historico_cfe);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -476,11 +477,47 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,GUARDAR_INE_ATRAS);
     }
 
+    private void setDefaultPictureValues() {
+
+        ultima_foto_Historico = database.getElement(clave_ultimo_archivo);
+        if(!ultima_foto_Historico.isEmpty()) {
+            boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
+            boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
+            boton_historico_cfe.setTag("View");
+        }
+
+        ultima_foto_Consumo = database.getElement("clave_consumo_luz");
+        if(!ultima_foto_Consumo.isEmpty()) {
+            boton_consumo_de_luz.setBackgroundResource(R.color.colorBackground);
+            boton_consumo_de_luz.setImageResource(R.mipmap.eye_icon);
+            boton_consumo_de_luz.setTag("View");
+        }
+
+        ultima_foto_ine_frente = database.getElement("clave_consumo_luz");
+        if(!ultima_foto_ine_frente.isEmpty()) {
+            boton_ine_frente.setBackgroundResource(R.color.colorBackground);
+            boton_ine_frente.setImageResource(R.mipmap.eye_icon);
+            boton_ine_frente.setTag("View");
+        }
+
+        ultima_foto_ine_atras = database.getElement("clave_ine_atras");
+        if(!ultima_foto_ine_atras.isEmpty()) {
+            boton_ine_atras.setBackgroundResource(R.color.colorBackground);
+            boton_ine_atras.setImageResource(R.mipmap.eye_icon);
+            boton_ine_atras.setTag("View");
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode){
             case GUARDAR_FOTO_HISTORICO:
+                database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
+                boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
+                boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
+                boton_historico_cfe.setTag("View");
+
                 if (resultCode == RESULT_OK) {
                     uploadImage(ultima_foto_ruta);
                 }
@@ -547,9 +584,7 @@ public class MainActivity extends AppCompatActivity {
                             scaleBitmapDown(
                                     MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                     MAX_DIMENSION);
-
                     callCloudVision(bitmap);
-
 
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
@@ -699,14 +734,10 @@ public class MainActivity extends AppCompatActivity {
                     contenedor_historico.addView(elemento);
 
                 }
-
-
             }
 
+
             if(historico_filtrado.size() > 0){
-                boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
-                boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
-                boton_historico_cfe.setTag("View");
                 LinearLayout contenedor_historico = findViewById(R.id.lista_historico);
                 contenedor_historico.setVisibility(View.VISIBLE);
                 TextView texto_historico_cfe_descripcion = findViewById(R.id.lbl_historico_cfe_descripcion);
@@ -731,8 +762,8 @@ public class MainActivity extends AppCompatActivity {
                 historico_filtrado.add(historico_promedio);
 
                 String json_historico_cfe = gson.toJson(historico_filtrado);
-                database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
                 database.saveElement(clave_historico, json_historico_cfe);
+
 
                 if (historico_filtrado != null && historico_filtrado.size() > 0) {
                     String historic = "";
@@ -746,8 +777,6 @@ public class MainActivity extends AppCompatActivity {
             else{
                 Toast.makeText(getApplicationContext(), "No se pudo recuperar el histórico", Toast.LENGTH_SHORT).show();
             }
-
-
         }
     }
 
