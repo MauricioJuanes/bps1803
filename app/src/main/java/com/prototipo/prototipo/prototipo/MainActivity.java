@@ -518,17 +518,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        if (resultCode != RESULT_OK){
+            return;
+        }
         switch (requestCode){
             case GUARDAR_FOTO_HISTORICO:
-                database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
                 boton_historico_cfe.setBackgroundResource(R.color.colorBackground);
                 boton_historico_cfe.setImageResource(R.mipmap.eye_icon);
                 boton_historico_cfe.setTag("View");
-
-                if (resultCode == RESULT_OK) {
-                    uploadImage(ultima_foto_ruta);
-                }
+                database.saveElement(clave_ultimo_archivo, ultima_foto_Historico);
+                uploadImage(ultima_foto_ruta);
                 break;
             case 2:
                 boton_consumo_de_luz.setBackgroundResource(R.color.colorBackground);
