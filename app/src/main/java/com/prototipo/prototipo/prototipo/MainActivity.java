@@ -1137,7 +1137,7 @@ public class MainActivity extends AppCompatActivity {
         if (uncheckedFields.equals("")){
             return true;
         }else{
-            Toast.makeText(getApplicationContext(), "No respondio los campos: " + uncheckedFields + "revise la encuesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "No respondio los campos: " + uncheckedFields , Toast.LENGTH_SHORT).show();
             return false;
         }
 
