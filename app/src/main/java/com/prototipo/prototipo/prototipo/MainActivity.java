@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_LimpiarCampos;
     private Button btn_Salir;
 //    private CheckBox checkbox_propietario;
-    private Uri ruta_foto_historico;
-    private String ultima_foto_Historico;
     public ArrayList<Historico> historico_cfe;
 
     private Database database;
@@ -130,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Gson gson;
 
+    private Uri ruta_foto_historico;
+    private String ultima_foto_Historico;
     private Uri ruta_foto_Consumo;
     private String ultima_foto_Consumo;
     private Uri ruta_foto_Ine_frente;
@@ -519,6 +519,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK){
+            switch (requestCode) {
+                case GUARDAR_FOTO_HISTORICO:
+                    ultima_foto_Historico = null;
+                    break;
+                case 2:
+                    ultima_foto_Consumo = null;
+                    break;
+                case 3:
+                    ultima_foto_ine_frente = null;
+                    break;
+                case 4:
+                    ultima_foto_ine_atras = null;
+                    break;
+                default:
+            }
             return;
         }
         switch (requestCode){
@@ -577,6 +592,7 @@ public class MainActivity extends AppCompatActivity {
             case 8:
                 if (resultCode == RESULT_OK) {
                     //deleteImage(ruta_foto_Ine_atras);
+                    ultima_foto_Historico=null;
                     database.DeleteElement(clave_ultimo_archivo);
                     restoreImageButton(boton_historico_cfe);
                 }
@@ -1118,19 +1134,19 @@ public class MainActivity extends AppCompatActivity {
             uncheckedFields += "Dimension de la azotea, ";
         }
 
-        if (clave_ultimo_archivo.equals("")){
+        if (ultima_foto_Historico == null || ultima_foto_Historico.equals("")){
             uncheckedFields += "Historico de cfe, ";
         }
 
-        if (ultima_foto_Consumo.equals("")){
+        if (ultima_foto_Consumo == null || ultima_foto_Consumo.equals("")){
             uncheckedFields += "Consumo de luz, ";
         }
 
-        if (ultima_foto_ine_frente.equals("")){
+        if (ultima_foto_ine_frente == null || ultima_foto_ine_frente.equals("")){
             uncheckedFields += "INE frente, ";
         }
 
-        if (ultima_foto_ine_atras.equals("")){
+        if (ultima_foto_ine_atras == null || ultima_foto_ine_atras.equals("")){
             uncheckedFields += "INE atras, ";
         }
 
