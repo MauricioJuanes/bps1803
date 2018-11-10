@@ -325,7 +325,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v){
                         close = true;
-                        askConfirmation("Salir de la aplicación", "¿Desea Salir de la aplicacion?");
+                        finish();
+                        //askConfirmation("Salir de la aplicación", "¿Desea Salir de la aplicacion?");
                     }
                 }
         );
